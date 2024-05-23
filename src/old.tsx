@@ -54,43 +54,6 @@ function App() {
   const [image, setImage] = useState<File | null>(null);
 
 
-  useEffect(() => {
-
-    const unsub = onSnapshot(collectionRef, (QuerySnapshot) => {
-      const items: any = [];
-      QuerySnapshot.forEach((doc) => {
-        items.push(doc.data());
-      });
-
-
-      setPosts(items);
-    })
-
-
-    const getUsers = onSnapshot(collection(db, "users"), (QuerySnapshot) => {
-      const usersData: any = {};
-      QuerySnapshot.forEach((doc) => {
-        usersData[doc.data().id] = doc.data();
-
-      });
-
-
-      setUsers(usersData);
-
-    })
-
-    const getComments = onSnapshot(collection(db, "comments"), (QuerySnapshot) => {
-      const items: any = []
-      QuerySnapshot.forEach((doc) => {
-        items.push(doc.data())
-      })
-
-      setComments(items);
-    })
-
-    return () => { unsub(); getUsers(); getComments(); }
-  }, [])
-
   const addPost = async () => {
     let imageUrl = '';
 
@@ -130,25 +93,6 @@ function App() {
   }
 
 
-  const deletePost = async (post: Post) => {
-    try {
-      if (post.imageUrl) {
-        const uuid = post.imageUrl.slice(77, 113);
-        const imageRef = ref(storage, 'posts/' + uuid)
-        deleteObject(imageRef).then(() => { console.log("image deleted") })
-
-      }
-      const postRef = doc(collectionRef, post.id)
-      await deleteDoc(postRef);
-
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-
-
-
   const uploadImage = async (): Promise<string> => {
     if (!image) {
       alert("Add an image!");
@@ -170,32 +114,6 @@ function App() {
   }
 
 
-  const [comment, setComment] = useState('');
-  const addComment = async (post: Post) => {
-    const newComment = {
-      id: uuidv4(),
-      comment: comment,
-      owner: currentUser.uid,
-      postID: post.id,
-    }
-
-    try {
-      const commentRef = doc(collection(db, "comments"), newComment.id);
-      await setDoc(commentRef, newComment);
-      setComment('');
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  const deleteComment = async (comment: Comment) => {
-    try {
-      const commentRef = doc(collection(db, "comments"), comment.id)
-      await deleteDoc(commentRef);
-    } catch (error) {
-      console.log(error)
-    }
-  }
 
   return (
     <>
