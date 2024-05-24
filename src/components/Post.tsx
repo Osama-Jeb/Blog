@@ -1,10 +1,16 @@
-import { deleteObject, ref } from "firebase/storage"
 import { Post as PostProps } from "../constants/types"
-import { db, storage } from "../firbase"
-import { collection, deleteDoc, doc } from "firebase/firestore"
+import { db } from "../firbase"
+import { arrayRemove, arrayUnion, collection, doc, getDoc, updateDoc } from "firebase/firestore"
 import { useInfo } from "../providers/InfoProvider"
+import { GoCommentDiscussion } from "react-icons/go";
+import { CiShare2 } from "react-icons/ci";
+
+import { FaBookmark } from "react-icons/fa";
+import { CiBookmarkPlus } from "react-icons/ci";
+import { TbArrowBigUpLineFilled, TbArrowBigDownLineFilled } from "react-icons/tb";
+import { NavLink } from "react-router-dom"
 import { useAuth } from "../providers/AuthProvider"
-import Comments from "./Comments"
+
 
 type PoP = {
     post: PostProps
@@ -12,40 +18,104 @@ type PoP = {
 
 const Post = (props: PoP) => {
 
-    const { users } = useInfo();
-    const { currentUser } = useAuth();
+    const { users, comments } = useInfo();
+    const {currentUser} = useAuth()
+    const user = Object.values(users).find(user => user.id === currentUser.uid);
 
-    const deletePost = async (post: PostProps) => {
+    
+
+
+    const regex = /(<([^>]+)>)/gi;
+    const filteredComments = comments?.filter(comment => comment.postID === props.post.id);
+
+    const bookmark = async () => {
         try {
-            if (post.imageUrl) {
-                const uuid = post.imageUrl.slice(77, 113);
-                const imageRef = ref(storage, 'posts/' + uuid)
-                deleteObject(imageRef).then(() => { console.log("image deleted") })
+            const userRef = doc(collection(db, 'users'), currentUser.uid)
+            const userDoc = await getDoc(userRef);
 
+
+            if (userDoc.exists()) {
+                const userData = userDoc.data();
+                const currentBookmarks = userData.bookmark || [];
+
+                if (currentBookmarks.includes(props.post.id)) {
+                    // Remove the post from bookmarks
+                    await updateDoc(userRef, {
+                        bookmark: arrayRemove(props.post.id),
+                    });
+                } else {
+                    // Add the post to bookmarks
+                    await updateDoc(userRef, {
+                        bookmark: arrayUnion(props.post.id),
+                    });
+                }
+            } else {
+                console.log('User document not found');
             }
-            const postRef = doc(collection(db, 'posts'), post.id)
-            await deleteDoc(postRef);
 
         } catch (error) {
             console.log(error)
         }
     }
 
+
     return (
-        <div className=" shadow-xl w-[50vw] bg-slate-300 rounded-xl">
-            <p>{props.post.title}</p>
-            <p>{props.post.content}</p>
-            <p>{users?.[props.post.owner]?.email}</p>
-            {
-                props.post.imageUrl && <img src={props.post.imageUrl} width={200} alt={props.post.title} />
-            }
-            {
-                props.post.owner == currentUser?.uid ?
-                    <button onClick={() => { deletePost(props.post) }}>Delete Post</button>
-                    :
-                    null
-            }
-            <Comments post={props.post} />
+
+
+        <div className="shadow-xl w-[50vw] bg-gray-200 rounded-xl p-3">
+            <NavLink to={`/post/${props.post.id}`}>
+
+                <div className="flex items-center justify-between">
+                    <div>
+                        <p className="font-bold text-2xl">{props.post.title.charAt(0).toUpperCase()}{props.post.title.slice(1)} </p>
+                        <p>{props.post.content.replace(regex, "")}</p>
+                    </div>
+                    {
+                        props.post.imageUrl && <img src={props.post.imageUrl} width={200} className="rounded-xl" alt={props.post.title} />
+                    }
+                </div>
+            </NavLink>
+            <hr />
+            <div className="flex items-center gap-7 text-xl">
+                <div className="flex items-center p-2 gap-1">
+                    <button>
+                        <TbArrowBigUpLineFilled />
+                    </button>
+
+                    <span>0</span>
+
+                    <button>
+                        <TbArrowBigDownLineFilled />
+                    </button>
+
+                </div>
+
+                <NavLink to={`/post/${props.post.id}`}>
+
+                    <div className="flex items-center gap-1 hover:bg-gray-400 p-1 rounded">
+                        <GoCommentDiscussion />
+                        {filteredComments?.length}
+                    </div>
+                </NavLink>
+
+                <div>
+                    <CiShare2 />
+                </div>
+
+                <button onClick={bookmark}>
+                    {
+                        user?.bookmark?.includes(props.post.id) ?
+                            <>
+                                <FaBookmark />
+
+                            </>
+                            :
+                            <>
+                                <CiBookmarkPlus />
+                            </>
+                    }
+                </button>
+            </div>
         </div>
     )
 }

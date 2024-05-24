@@ -13,6 +13,7 @@ export type Post = {
 export type User = {
     id: string;
     email: string;
+    bookmark : string[];
 }
 
 export type Comment = {
