@@ -1,13 +1,11 @@
-import { FieldValue } from "firebase/firestore";
-
 export type Post = {
     id: string;
     title: string;
     content: string;
     imageUrl?: string;
     owner: string;
-    created_at: FieldValue;
-    updated_at: FieldValue;
+    created_at: any;
+    updated_at: any;
     upvotes : string[];
     downvotes : string[];
 }
@@ -17,8 +15,8 @@ export type User = {
     username: string;
     email: string;
     avatar? : string,
-    created_at: FieldValue;
-    updated_at: FieldValue;
+    created_at: any;
+    updated_at: any;
     bookmark : string[];
 }
 

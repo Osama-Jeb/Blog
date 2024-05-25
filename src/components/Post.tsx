@@ -15,6 +15,11 @@ import { NavLink } from "react-router-dom"
 import UpvoteDownvote from "./UpvoteDownvote";
 
 
+import {
+    FacebookShareButton,
+    FacebookIcon
+} from "react-share";
+
 type PoP = {
     post: PostProps
 }
@@ -23,8 +28,8 @@ const Post = (props: PoP) => {
 
     const { users, comments } = useInfo();
     const { currentUser } = useAuth()
-    const user = Object.values(users).find(user => user.id === currentUser?.uid);
-    const owner = Object.values(users).find(user => user.id === props.post.owner);
+    const user = users && Object.values(users).find(user => user.id === currentUser?.uid);
+    const owner = users && Object.values(users).find(user => user.id === props.post.owner);
 
 
 
@@ -42,12 +47,12 @@ const Post = (props: PoP) => {
                 const currentBookmarks = userData.bookmark || [];
 
                 if (currentBookmarks.includes(props.post.id)) {
-                    // Remove the post from bookmarks
+                    // remove the post from bookmarks
                     await updateDoc(userRef, {
                         bookmark: arrayRemove(props.post.id),
                     });
                 } else {
-                    // Add the post to bookmarks
+                    // add the post to bookmarks
                     await updateDoc(userRef, {
                         bookmark: arrayUnion(props.post.id),
                     });
@@ -63,8 +68,6 @@ const Post = (props: PoP) => {
 
 
     return (
-
-
         <div className="shadow-xl w-[50vw] bg-gray-200 rounded-xl p-3">
             <div className="flex items-center gap-3">
                 <img className="rounded-full aspect-square" src={owner?.avatar} width={35} alt="" />
@@ -78,7 +81,7 @@ const Post = (props: PoP) => {
                         <p>{props.post.content.replace(regex, "")}</p>
                     </div>
                     {
-                        props.post.imageUrl && <img src={props.post.imageUrl} width={200} className="rounded-xl" alt={props.post.title} />
+                        props.post.imageUrl && <img loading="lazy" src={props.post.imageUrl} width={200} className="rounded-xl" alt={props.post.title} />
                     }
                 </div>
             </NavLink>
@@ -97,6 +100,12 @@ const Post = (props: PoP) => {
 
                 <div>
                     <CiShare2 />
+
+                    <FacebookShareButton url={`http://localhost:5173/post/${props.post.id}`} >
+                        <FacebookIcon size={32} round />
+                    </FacebookShareButton>
+
+
                 </div>
 
                 <button onClick={bookmark}>

@@ -1,15 +1,19 @@
 import { User } from "../constants/types";
+import { useAuth } from "../providers/AuthProvider";
 import { useInfo } from "../providers/InfoProvider";
 
 const UsersNav = () => {
-    const { users } = useInfo()
+    const { users } = useInfo();
+    const { currentUser } = useAuth();
 
     const usersArray: User[] = [];
 
     for (const userId in users) {
         if (Object.prototype.hasOwnProperty.call(users, userId)) {
-            const user = users[userId];
-            usersArray.push(user);
+            if (userId != currentUser.uid) {
+                const user = users[userId];
+                usersArray.push(user);
+            }
         }
     }
 

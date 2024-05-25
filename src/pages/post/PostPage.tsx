@@ -5,6 +5,7 @@ import { Post as PostProps } from "../../constants/types"
 import { deleteObject, ref } from "firebase/storage";
 import { db, storage } from "../../firbase";
 import { collection, deleteDoc, doc } from "firebase/firestore";
+import Comments from "../../components/Comments";
 
 const PostPage = () => {
     const id = useParams();
@@ -33,11 +34,8 @@ const PostPage = () => {
 
     return (
         <>
-
-            thxxxis is the page to show a single post : {id.id}
-
             <div className=" shadow-xl w-[50vw] bg-slate-300 rounded-xl p-3">
-                {/* <p>{props.post.created_at.toDate().toString().slice(0, 24)}</p> */}
+                <p>{myPost?.created_at.toDate().toString().slice(0, 24)}</p>
                 <span className="float-right">
                     {
                         myPost?.owner == currentUser?.uid ?
@@ -46,6 +44,12 @@ const PostPage = () => {
                             null
                     }
                 </span>
+
+                <div>
+                    <p>{myPost?.title}</p>
+                </div>
+
+                <Comments post={myPost} />
             </div>
         </>
     )

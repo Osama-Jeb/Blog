@@ -8,7 +8,7 @@ import { collection, doc, setDoc } from "firebase/firestore";
 import { db } from "../firbase";
 
 type PoP = {
-    post: PostProps
+    post: PostProps | undefined
 }
 
 const Comments = (props: PoP) => {
@@ -16,7 +16,7 @@ const Comments = (props: PoP) => {
     const { comments } = useInfo();
     const {currentUser} = useAuth();
 
-    const addComment = async (id: string) => {
+    const addComment = async (id?: string) => {
         const newComment = {
             id: uuidv4(),
             comment: comment,
@@ -35,7 +35,7 @@ const Comments = (props: PoP) => {
 
     return (
         <>
-            {comments && comments.filter(comment => comment.postID === props.post.id).map((element, index) => (
+            {comments && comments.filter(comment => comment.postID === props.post?.id).map((element, index) => (
                 <div key={index}>
                     <Comment comment={element} />
                 </div>
@@ -43,7 +43,7 @@ const Comments = (props: PoP) => {
 
             <div>
                 <input type="text" placeholder='Comment' value={comment} onChange={(e) => { setComment(e.target.value) }} />
-                <button onClick={() => { addComment(props.post.id) }}>Comment</button>
+                <button onClick={() => { addComment(props.post?.id) }}>Comment</button>
             </div>
         </>
     )

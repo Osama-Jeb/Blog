@@ -6,6 +6,8 @@ import { collection, doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { db, storage } from "../firbase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
+
+
 const AddPost = () => {
     const { currentUser } = useAuth();
 
@@ -17,8 +19,8 @@ const AddPost = () => {
     const addPost = async () => {
         let imageUrl = '';
 
-        if (!title) {
-            alert("add title please")
+        if (!title || !content) {
+            alert("add title and content please")
             return
         }
 
@@ -75,15 +77,20 @@ const AddPost = () => {
         }
     }
 
+
     return (
         <>
-            <div
-                style={{ display: "flex", flexDirection: "column", gap: 20 }}
-            >
-                <input placeholder='title' type="text" value={title} onChange={(e) => { setTitle(e.target.value) }} />
-                <input placeholder="content" type="text" value={content} onChange={(e) => { setContent(e.target.value) }} />
+            <div className="flex flex-col items-center gap-4 h-[100vh] justify-center w-[100vw]">
+                <input className=" border-2 border-gray-600 p-2 rounded-xl w-[50%]" placeholder='title' type="text" value={title} onChange={(e) => { setTitle(e.target.value) }} />
 
-                <input type="file" onChange={(e) => { setImage(e.target.files ? e.target.files[0] : null) }} />
+
+                <textarea className=" border-2 border-gray-600 p-2 rounded-xl w-[50%] h-[20vh]" placeholder="Content" onChange={(e) => { setContent(e.target.innerText) }}></textarea>
+
+                <input className=" w-[50%]" type="file" onChange={(e) => { setImage(e.target.files ? e.target.files[0] : null) }} />
+
+                {
+                    image && <img src={URL.createObjectURL(image)} className="w-[50%] h-[40vh] aspect-square rounded-xl" alt="" />
+                }
 
                 <button className="bg-black text-white px-4 py-2 rounded" disabled={loading} onClick={addPost}>
 
@@ -100,10 +107,10 @@ const AddPost = () => {
                             </>
                             :
                             <>
-                            Add Post
+                                Add Post
                             </>
                     }
-                    </button>
+                </button>
             </div>
         </>
     )
