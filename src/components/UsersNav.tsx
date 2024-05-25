@@ -10,7 +10,7 @@ const UsersNav = () => {
 
     for (const userId in users) {
         if (Object.prototype.hasOwnProperty.call(users, userId)) {
-            if (userId != currentUser.uid) {
+            if (userId != currentUser?.uid) {
                 const user = users[userId];
                 usersArray.push(user);
             }

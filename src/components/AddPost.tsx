@@ -38,7 +38,7 @@ const AddPost = () => {
             title,
             content,
             imageUrl,
-            owner: currentUser.uid,
+            owner: currentUser?.uid,
             created_at: serverTimestamp(),
             updated_at: serverTimestamp(),
             upvotes: [],

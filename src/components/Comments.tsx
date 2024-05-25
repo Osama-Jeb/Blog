@@ -20,7 +20,7 @@ const Comments = (props: PoP) => {
         const newComment = {
             id: uuidv4(),
             comment: comment,
-            owner: currentUser.uid,
+            owner: currentUser?.uid,
             postID: id,
         }
 

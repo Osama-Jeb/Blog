@@ -48,7 +48,7 @@ const Sign = () => {
                 const avatarUrl = await uploadImage();
 
                 const newUser = {
-                    id: user.uid,
+                    id: user?.uid,
                     email: user.email,
                     username: username,
                     created_at: serverTimestamp(),
