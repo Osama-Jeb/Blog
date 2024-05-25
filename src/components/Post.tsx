@@ -101,7 +101,7 @@ const Post = (props: PoP) => {
                 <div>
                     <CiShare2 />
 
-                    <FacebookShareButton url={`http://localhost:5173/post/${props.post.id}`} >
+                    <FacebookShareButton url={`https://myblogproject.vercel.app/post/${props.post.id}`} >
                         <FacebookIcon size={32} round />
                     </FacebookShareButton>
 
