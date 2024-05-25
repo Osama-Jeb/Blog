@@ -4,7 +4,7 @@ import TextStyle from '@tiptap/extension-text-style'
 import { EditorProvider, useCurrentEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 
-import { FaBold, FaItalic, FaStrikethrough, FaHeading, FaListOl, FaListUl, FaQuoteLeft, FaRedo, FaUndo, FaUnderline } from 'react-icons/fa'
+import { FaBold, FaItalic, FaStrikethrough, FaListOl, FaListUl, FaQuoteLeft, FaRedo, FaUndo } from 'react-icons/fa'
 
 const MenuBar = () => {
     const { editor } = useCurrentEditor()

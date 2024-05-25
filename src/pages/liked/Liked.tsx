@@ -12,7 +12,7 @@ const Liked = () => {
     return (
         <>
             {
-                bookmarkedPosts && bookmarkedPosts?.map((post, index) => (
+                bookmarkedPosts && bookmarkedPosts?.map((post) => (
                     <>
                         <Post post={post} />
                     </>
