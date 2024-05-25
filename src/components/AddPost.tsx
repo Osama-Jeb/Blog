@@ -39,6 +39,8 @@ const AddPost = () => {
             owner: currentUser.uid,
             created_at: serverTimestamp(),
             updated_at: serverTimestamp(),
+            upvotes: [],
+            downvotes: []
         };
 
         try {

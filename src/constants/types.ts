@@ -8,11 +8,17 @@ export type Post = {
     owner: string;
     created_at: FieldValue;
     updated_at: FieldValue;
+    upvotes : string[];
+    downvotes : string[];
 }
 
 export type User = {
     id: string;
+    username: string;
     email: string;
+    avatar? : string,
+    created_at: FieldValue;
+    updated_at: FieldValue;
     bookmark : string[];
 }
 

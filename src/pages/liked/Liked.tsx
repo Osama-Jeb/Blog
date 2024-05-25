@@ -1,7 +1,8 @@
 const Liked = () => {
-    return(
+    
+    return (
         <>
-        <p>Liked Posts here</p>
+            <p>Liked Posts here</p>
         </>
     )
 }

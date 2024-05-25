@@ -1,15 +1,18 @@
 import { Post as PostProps } from "../constants/types"
+
 import { db } from "../firbase"
 import { arrayRemove, arrayUnion, collection, doc, getDoc, updateDoc } from "firebase/firestore"
+
 import { useInfo } from "../providers/InfoProvider"
+import { useAuth } from "../providers/AuthProvider"
+
 import { GoCommentDiscussion } from "react-icons/go";
 import { CiShare2 } from "react-icons/ci";
-
 import { FaBookmark } from "react-icons/fa";
 import { CiBookmarkPlus } from "react-icons/ci";
-import { TbArrowBigUpLineFilled, TbArrowBigDownLineFilled } from "react-icons/tb";
+
 import { NavLink } from "react-router-dom"
-import { useAuth } from "../providers/AuthProvider"
+import UpvoteDownvote from "./UpvoteDownvote";
 
 
 type PoP = {
@@ -19,10 +22,10 @@ type PoP = {
 const Post = (props: PoP) => {
 
     const { users, comments } = useInfo();
-    const {currentUser} = useAuth()
-    const user = Object.values(users).find(user => user.id === currentUser.uid);
+    const { currentUser } = useAuth()
+    const user = Object.values(users).find(user => user.id === currentUser?.uid);
+    const owner = Object.values(users).find(user => user.id === props.post.owner);
 
-    
 
 
     const regex = /(<([^>]+)>)/gi;
@@ -30,7 +33,7 @@ const Post = (props: PoP) => {
 
     const bookmark = async () => {
         try {
-            const userRef = doc(collection(db, 'users'), currentUser.uid)
+            const userRef = doc(collection(db, 'users'), currentUser?.uid)
             const userDoc = await getDoc(userRef);
 
 
@@ -63,6 +66,10 @@ const Post = (props: PoP) => {
 
 
         <div className="shadow-xl w-[50vw] bg-gray-200 rounded-xl p-3">
+            <div className="flex items-center gap-3">
+                <img className="rounded-full aspect-square" src={owner?.avatar} width={35} alt="" />
+                <p>{owner?.username}</p>
+            </div>
             <NavLink to={`/post/${props.post.id}`}>
 
                 <div className="flex items-center justify-between">
@@ -77,18 +84,8 @@ const Post = (props: PoP) => {
             </NavLink>
             <hr />
             <div className="flex items-center gap-7 text-xl">
-                <div className="flex items-center p-2 gap-1">
-                    <button>
-                        <TbArrowBigUpLineFilled />
-                    </button>
 
-                    <span>0</span>
-
-                    <button>
-                        <TbArrowBigDownLineFilled />
-                    </button>
-
-                </div>
+                <UpvoteDownvote post={props.post} />
 
                 <NavLink to={`/post/${props.post.id}`}>
 
@@ -104,7 +101,7 @@ const Post = (props: PoP) => {
 
                 <button onClick={bookmark}>
                     {
-                        user?.bookmark?.includes(props.post.id) ?
+                        user?.bookmark.includes(props.post.id) ?
                             <>
                                 <FaBookmark />
 
