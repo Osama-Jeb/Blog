@@ -6,13 +6,14 @@ import { db } from "../firbase";
 import { useNavigate } from "react-router-dom";
 
 type PoP = {
-    post: PostProps
+    post: PostProps | undefined
 }
 
 
 const UpvoteDownvote = (props: PoP) => {
-
+    
     const { currentUser } = useAuth();
+    const difference = (props.post?.upvotes.length ?? 0) - (props.post?.downvotes.length ?? 0)
     const navigate = useNavigate();
 
     const toggleVote = async (voteType: 'upvote' | 'downvote') => {
@@ -21,7 +22,7 @@ const UpvoteDownvote = (props: PoP) => {
         }
 
         try {
-            const postRef = doc(collection(db, 'posts'), props.post.id);
+            const postRef = doc(collection(db, 'posts'), props.post?.id);
             const postDoc = await getDoc(postRef);
 
             if (postDoc.exists()) {
@@ -78,16 +79,16 @@ const UpvoteDownvote = (props: PoP) => {
         <>
 
             <div className="flex items-center p-2 gap-1">
-                <button onClick={() => {toggleVote('upvote')}}
-                    className={`${props.post.upvotes.includes(currentUser?.uid) ? 'text-red-700' : ''}`}
+                <button onClick={() => { toggleVote('upvote') }}
+                    className={`${props.post?.upvotes.includes(currentUser?.uid) ? 'text-red-700' : ''}`}
                 >
                     <TbArrowBigUpLineFilled />
                 </button>
 
-                <span>{props.post.upvotes ? props.post.upvotes.length : 0}</span>
+                <span>{difference} </span>
 
-                <button onClick={() => {toggleVote('downvote')}}
-                    className={`${props.post.downvotes.includes(currentUser?.uid) ? 'text-blue-500' : ''}`}
+                <button onClick={() => { toggleVote('downvote') }}
+                    className={`${props.post?.downvotes.includes(currentUser?.uid) ? 'text-blue-500' : ''}`}
                 >
                     <TbArrowBigDownLineFilled />
                 </button>

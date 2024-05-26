@@ -16,7 +16,6 @@ export default function AuthProvider({ children }: PropsWithChildren) {
     useEffect(() => {
         auth.onAuthStateChanged((user) => {
             setCurrentUser(user);
-            console.log(user)
         })
 
     }, [])

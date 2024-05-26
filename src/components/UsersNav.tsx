@@ -2,6 +2,8 @@ import { User } from "../constants/types";
 import { useAuth } from "../providers/AuthProvider";
 import { useInfo } from "../providers/InfoProvider";
 
+
+
 const UsersNav = () => {
     const { users } = useInfo();
     const { currentUser } = useAuth();
@@ -17,10 +19,8 @@ const UsersNav = () => {
         }
     }
 
-    console.log(usersArray)
-
     return (
-        <div className="fixed top-0 right-0 flex items-center justify-around gap-4 flex-col h-[75vh] text-white w-[20vw]">
+        <div className="fixed top-0 right-0 flex items-center justify-around gap-4 flex-col h-[75vh] text-white w-[15vw]">
             {
                 usersArray.map((user, index) => (
                     <div key={index} className="shadow-xl bg-white p-3 w-full text-black">

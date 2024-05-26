@@ -1,24 +1,16 @@
 import { Post as PostProps } from "../constants/types"
 
-import { db } from "../firbase"
-import { arrayRemove, arrayUnion, collection, doc, getDoc, updateDoc } from "firebase/firestore"
-
 import { useInfo } from "../providers/InfoProvider"
-import { useAuth } from "../providers/AuthProvider"
 
 import { GoCommentDiscussion } from "react-icons/go";
-import { CiShare2 } from "react-icons/ci";
-import { FaBookmark } from "react-icons/fa";
-import { CiBookmarkPlus } from "react-icons/ci";
 
 import { NavLink } from "react-router-dom"
 import UpvoteDownvote from "./UpvoteDownvote";
 
 
-import {
-    FacebookShareButton,
-    FacebookIcon
-} from "react-share";
+
+import Bookmark from "./Bookmark";
+import Share from "./Share";
 
 type PoP = {
     post: PostProps
@@ -27,8 +19,7 @@ type PoP = {
 const Post = (props: PoP) => {
 
     const { users, comments } = useInfo();
-    const { currentUser } = useAuth()
-    const user = users && Object.values(users).find(user => user.id === currentUser?.uid);
+
     const owner = users && Object.values(users).find(user => user.id === props.post.owner);
 
 
@@ -36,41 +27,12 @@ const Post = (props: PoP) => {
     const regex = /(<([^>]+)>)/gi;
     const filteredComments = comments?.filter(comment => comment.postID === props.post.id);
 
-    const bookmark = async () => {
-        try {
-            const userRef = doc(collection(db, 'users'), currentUser?.uid)
-            const userDoc = await getDoc(userRef);
-
-
-            if (userDoc.exists()) {
-                const userData = userDoc.data();
-                const currentBookmarks = userData.bookmark || [];
-
-                if (currentBookmarks.includes(props.post.id)) {
-                    // remove the post from bookmarks
-                    await updateDoc(userRef, {
-                        bookmark: arrayRemove(props.post.id),
-                    });
-                } else {
-                    // add the post to bookmarks
-                    await updateDoc(userRef, {
-                        bookmark: arrayUnion(props.post.id),
-                    });
-                }
-            } else {
-                console.log('User document not found');
-            }
-
-        } catch (error) {
-            console.log(error)
-        }
-    }
 
 
     return (
         <div className="shadow-xl w-[50vw] bg-gray-200 rounded-xl p-3">
             <div className="flex items-center gap-3">
-                <img className="rounded-full aspect-square" src={owner?.avatar} width={35} alt="" />
+                <img loading="lazy" className="rounded-full aspect-square" src={owner?.avatar} width={35} alt="" />
                 <p>{owner?.username}</p>
             </div>
             <NavLink to={`/post/${props.post.id}`}>
@@ -98,29 +60,10 @@ const Post = (props: PoP) => {
                     </div>
                 </NavLink>
 
-                <div>
-                    <CiShare2 />
+                <Share post={props.post} />
 
-                    <FacebookShareButton url={`https://myblogproject.vercel.app/post/${props.post.id}`} >
-                        <FacebookIcon size={32} round />
-                    </FacebookShareButton>
+                <Bookmark post={props.post} />
 
-
-                </div>
-
-                <button onClick={bookmark}>
-                    {
-                        user?.bookmark.includes(props.post.id) ?
-                            <>
-                                <FaBookmark />
-
-                            </>
-                            :
-                            <>
-                                <CiBookmarkPlus />
-                            </>
-                    }
-                </button>
             </div>
         </div>
     )

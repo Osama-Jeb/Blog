@@ -5,6 +5,7 @@ import { Post } from "../constants/types";
 import { collection, doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { db, storage } from "../firbase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import Tiptap from "./Tiptap";
 
 
 
@@ -12,7 +13,7 @@ const AddPost = () => {
     const { currentUser } = useAuth();
 
     const [title, setTitle] = useState('');
-    const [content, setContent] = useState('');
+    const [content, setContent] = useState('<p>Write Something Here</p>');
     const [image, setImage] = useState<File | null>(null);
     const [loading, setLoading] = useState(false);
 
@@ -77,14 +78,12 @@ const AddPost = () => {
         }
     }
 
-
     return (
         <>
             <div className="flex flex-col items-center gap-4 h-[100vh] justify-center w-[100vw]">
-                <input className=" border-2 border-gray-600 p-2 rounded-xl w-[50%]" placeholder='title' type="text" value={title} onChange={(e) => { setTitle(e.target.value) }} />
+                <input className=" border-2 border-gray-600 p-2 rounded-xl w-[50%]" placeholder='Title' type="text" value={title} onChange={(e) => { setTitle(e.target.value) }} />
 
-
-                <textarea className=" border-2 border-gray-600 p-2 rounded-xl w-[50%] h-[20vh]" placeholder="Content" onChange={(e) => { setContent(e.target.innerText) }}></textarea>
+                <Tiptap setContent={setContent} />
 
                 <input className=" w-[50%]" type="file" onChange={(e) => { setImage(e.target.files ? e.target.files[0] : null) }} />
 
@@ -92,7 +91,7 @@ const AddPost = () => {
                     image && <img src={URL.createObjectURL(image)} className="w-[50%] h-[40vh] aspect-square rounded-xl" alt="" />
                 }
 
-                <button className="bg-black text-white px-4 py-2 rounded" disabled={loading} onClick={addPost}>
+                <button className="bg-black text-white px-4 py-2 rounded w-[50%] mt-2" disabled={loading} onClick={addPost}>
 
                     {
                         loading ?
