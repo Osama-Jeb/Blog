@@ -29,7 +29,7 @@ const Comments = (props: PoP) => {
     const addComment = async (id?: string) => {
 
         if (!currentUser) {
-            alert('Please Create An Account First')
+            alert('Please Sign In or Create an Account')
         }
 
         if (!comment) {

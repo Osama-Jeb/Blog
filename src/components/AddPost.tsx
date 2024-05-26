@@ -20,6 +20,10 @@ const AddPost = () => {
     const addPost = async () => {
         let imageUrl = '';
 
+        if(!currentUser) {
+            alert('Please Sign In or Create an Account')
+        }
+
         if (!title || !content) {
             alert("add title and content please")
             return
