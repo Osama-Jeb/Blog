@@ -1,11 +1,13 @@
 import { useInfo } from "../providers/InfoProvider"
-import { Post as PostProps } from "../constants/types"
-import Comment from "./Comment";
-import { useState } from "react";
 import { useAuth } from "../providers/AuthProvider";
+import { useState } from "react";
+import Comment from "./Comment";
+
+import { Post as PostProps } from "../constants/types"
 import { v4 as uuidv4 } from "uuid"
 import { collection, doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { db } from "../firbase";
+
 import { IoMdSend } from "react-icons/io";
 
 type PoP = {
@@ -17,10 +19,23 @@ const Comments = (props: PoP) => {
     const { comments } = useInfo();
     const { currentUser } = useAuth();
 
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            addComment(props.post?.id);
+        }
+    };
+
+
     const addComment = async (id?: string) => {
+
+        if (!currentUser) {
+            alert('Please Create An Account First')
+        }
+
         if (!comment) {
             return;
         }
+
         const newComment = {
             id: uuidv4(),
             comment: comment,
@@ -42,11 +57,14 @@ const Comments = (props: PoP) => {
     return (
         <>
             <div className="flex items-center gap-3">
-                <input className="w-[90%] p-2 rounded-xl" type="text" placeholder='Comment' value={comment} onChange={(e) => { setComment(e.target.value) }} />
+                <input className="w-[90%] p-2 rounded-xl" type="text" placeholder='Comment' value={comment}
+                    onChange={(e) => { setComment(e.target.value) }}
+                    onKeyDown={handleKeyDown} />
+
                 <button className="text-3xl" onClick={() => { addComment(props.post?.id) }}>
                     <IoMdSend />
-
                 </button>
+
             </div>
             {comments && comments.filter(comment => comment.postID === props.post?.id).map((element, index) => (
                 <div key={index}>

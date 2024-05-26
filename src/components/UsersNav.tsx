@@ -20,17 +20,21 @@ const UsersNav = () => {
     }
 
     return (
-        <div className="fixed top-0 right-0 flex items-center justify-around gap-4 flex-col h-[75vh] text-white w-[15vw]">
+        <>
             {
-                usersArray.map((user, index) => (
-                    <div key={index} className="shadow-xl bg-white p-3 w-full text-black">
-                        <p>{user.email}</p>
-                        <br />
-                        <p>add other stuff here like following or message maybe ?</p>
-                    </div>
-                ))
+                currentUser && <div className="fixed top-0 right-0 flex items-center justify-around gap-4 flex-col h-[75vh] text-white w-[15vw]">
+                    {
+                        usersArray.map((user, index) => (
+                            <div key={index} className="shadow-xl bg-white p-3 w-full text-black">
+                                <p>{user.email}</p>
+                                <br />
+                                <p>add other stuff here like following or message maybe ?</p>
+                            </div>
+                        ))
+                    }
+                </div>
             }
-        </div>
+        </>
     )
 }
 

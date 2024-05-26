@@ -11,6 +11,7 @@ import UpvoteDownvote from "./UpvoteDownvote";
 
 import Bookmark from "./Bookmark";
 import Share from "./Share";
+import { formatDistanceToNow } from "date-fns";
 
 type PoP = {
     post: PostProps
@@ -27,13 +28,15 @@ const Post = (props: PoP) => {
     const regex = /(<([^>]+)>)/gi;
     const filteredComments = comments?.filter(comment => comment.postID === props.post.id);
 
-
+    const datestring = props.post.created_at.toDate().toString();
+    const formatted = props.post && formatDistanceToNow(new Date(datestring), { addSuffix: true });
 
     return (
         <div className="shadow-xl w-[50vw] bg-gray-200 rounded-xl p-3">
             <div className="flex items-center gap-3">
                 <img loading="lazy" className="rounded-full aspect-square" src={owner?.avatar} width={35} alt="" />
                 <p>{owner?.username}</p>
+                <p>{formatted}</p>
             </div>
             <NavLink to={`/post/${props.post.id}`}>
 

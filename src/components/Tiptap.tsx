@@ -1,6 +1,5 @@
 import { EditorContent, useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
-import { useState } from 'react'
 
 import { FaBold, FaItalic, FaStrikethrough, FaListOl, FaListUl, FaQuoteLeft, FaRedo, FaUndo } from 'react-icons/fa'
 
@@ -111,12 +110,11 @@ type TipProp = {
 }
 
 const Tiptap = (props : TipProp) => {
-    const [editorContent, setEditorContent] = useState('');
+
     const editor = useEditor({
         extensions: [StarterKit],
         content: "<p>Write Something Here</p>",
         onUpdate({ editor }) {
-            setEditorContent(editor.getHTML())
             props.setContent(editor.getHTML())
         }
     })

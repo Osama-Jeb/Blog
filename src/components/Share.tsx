@@ -9,8 +9,6 @@ type PoP = {
     post: PostProps | undefined
 }
 
-//!! TODO: MAP OVER THE LINKS
-
 const Share = (props: PoP) => {
 
     const [openModal, setOpenModal] = useState(false);

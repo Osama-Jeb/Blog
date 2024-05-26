@@ -5,11 +5,13 @@ const Home = () => {
 
     const { posts } = useInfo()
 
+    const sortedPosts = posts?.sort((a, b) => b.created_at - a.created_at);
+
     return (
         <>
-            <div className="flex flex-col gap-4 items-center mt-4">
+            <div className="flex flex-col gap-5 items-center mt-4">
                 {
-                    posts && posts.slice().reverse().map((post, index) => (
+                    sortedPosts && sortedPosts.map((post, index) => (
                         <div key={index}>
                             <Post post={post} />
                         </div>

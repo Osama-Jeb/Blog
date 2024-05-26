@@ -52,6 +52,7 @@ const AddPost = () => {
 
             setTitle('');
             setContent('');
+            window.location.reload()
         } catch (error) {
             console.error(error);
         }
@@ -80,12 +81,12 @@ const AddPost = () => {
 
     return (
         <>
-            <div className="flex flex-col items-center gap-4 h-[100vh] justify-center w-[100vw]">
+            <div className="addPost flex flex-col items-center gap-4 h-[100vh] justify-center w-[100vw]">
                 <input className=" border-2 border-gray-600 p-2 rounded-xl w-[50%]" placeholder='Title' type="text" value={title} onChange={(e) => { setTitle(e.target.value) }} />
 
                 <Tiptap setContent={setContent} />
 
-                <input className=" w-[50%]" type="file" onChange={(e) => { setImage(e.target.files ? e.target.files[0] : null) }} />
+                    <input className=" w-[50%]" type="file" onChange={(e) => { setImage(e.target.files ? e.target.files[0] : null) }} />
 
                 {
                     image && <img src={URL.createObjectURL(image)} className="w-[50%] h-[40vh] aspect-square rounded-xl" alt="" />

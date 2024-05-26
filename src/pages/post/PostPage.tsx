@@ -65,18 +65,19 @@ const PostPage = () => {
                         <BsThreeDotsVertical />
                     </button>
                 </div>
-
-                {
-                    myPost?.imageUrl && <img loading="lazy" src={myPost?.imageUrl} className="rounded-xl w-full h-[350px]" alt={myPost?.title} />
-                }
                 <div className="p-4">
                     <p className="text-3xl font-bold">{myPost?.title}</p>
                     <br />
 
                     {myPost?.content && (
-                        <p className="text-lg" dangerouslySetInnerHTML={{ __html: myPost.content }}></p>
+                        <p className="text-lg prose-lg" dangerouslySetInnerHTML={{ __html: myPost.content }}></p>
                     )}
                 </div>
+
+
+                {
+                    myPost?.imageUrl && <img loading="lazy" src={myPost?.imageUrl} className="rounded-xl w-full h-[350px]" alt={myPost?.title} />
+                }
 
                 <div className="flex items-center gap-7 text-xl p-2">
 
