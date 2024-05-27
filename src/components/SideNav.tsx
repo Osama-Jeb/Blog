@@ -1,58 +1,38 @@
-import { FaHome, FaRegUserCircle } from "react-icons/fa";
-import { NavLink } from "react-router-dom";
-import { FaPlus } from "react-icons/fa6";
-import { CiBookmarkPlus } from "react-icons/ci";
-
+import { FaPlus, FaRegUserCircle } from "react-icons/fa";
+import { NavLink, useNavigate } from "react-router-dom";
 
 const SideNav = () => {
 
-    const links = [
-        {
-            name: "Create",
-            link: "addPost",
-            icon: <FaPlus />
-        },
-        {
-            name: "Home",
-            link: "home",
-            icon: <FaHome />
-        },
-        {
-            name: "Saved",
-            link: "liked",
-            icon: <CiBookmarkPlus />
-        },
-        {
-            name: "Profile",
-            link: "sign",
-            icon: <FaRegUserCircle />
-        },
-    ]
+    const navigate = useNavigate();
+
+    const onSearch = () => {
+        //TODO send the variable to this page then filter the posts
+        navigate('/home')
+    }
 
     return (
-        <nav className="fixed top-0 left-0 flex pt-[4vh] text-3xl gap-4 flex-col h-[100vh] bg-black text-white w-[5vw] hover:w-[10vw]">
+        // <nav className="fixed top-0 left-0 flex text-[4vh] pt-4 gap-4 flex-col h-[7vh] hover:h-[100vh] bg-black text-white w-[5vw] hover:w-[10vw] group">
+        <nav className="bg-black text-white flex items-center justify-between py-3 px-6">
 
-            {
-                links.map((link, index) => (
-                    <NavLink
-                        key={index}
-                        to={`/${link.link}`}
-                        className={({ isActive, isPending, isTransitioning }) =>
-                            [
-                                isPending ? "pending" : "",
-                                isActive ? "bg-blue-700" : "",
-                                isTransitioning ? "transitioning" : "",
-                            ].join(" ")
-                            + "p-4"}
-                    >
-                        <div className="flex items-center gap-3">
-                            <p>{link.icon}</p>
-                            <p className="navItem text-lg">{link.name}</p>
-                        </div>
-                    </NavLink>
-                ))
-            }
+            <NavLink to={"/home"}>Logo</NavLink>
+
+            <input type="text" className="rounded-full w-[60%]" placeholder="Search" onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                    onSearch();
+                }
+            }} />
+
+            <div className="flex items-center gap-4 text-3xl">
+                <NavLink to={"/addPost"} className="hover:rotate-180 hover:scale-125">
+                    <FaPlus />
+                </NavLink>
+                <NavLink to={"/sign"}>
+                    <FaRegUserCircle />
+                </NavLink>
+            </div>
+
         </nav>
+
     )
 }
 

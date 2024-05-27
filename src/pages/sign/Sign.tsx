@@ -9,7 +9,7 @@ const Sign = () => {
     const [newOld, setNewOld] = useState(false);
 
     return (
-        <div className="flex items-center justify-center h-[100vh]">
+        <div className="">
             <div>
                 {
                     currentUser ?
