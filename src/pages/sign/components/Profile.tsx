@@ -1,41 +1,89 @@
 import { useState } from "react";
 import { auth } from "../../../firbase";
-import { useAuth } from "../../../providers/AuthProvider";
 import { useInfo } from "../../../providers/InfoProvider";
 import Liked from "../../liked/Liked";
+import { TbArrowBigUpLineFilled } from "react-icons/tb";
+import { FaBookmark, FaCommentAlt } from "react-icons/fa";
+
+import { FaSignsPost } from "react-icons/fa6";
+import Post from "../../../components/Post";
 
 
 
 
 const Profile = () => {
-    const { currentUser } = useAuth();
-    const { users } = useInfo();
-    const userInfo = users && Object.values(users).find(user => user.id === currentUser?.uid);
+    const { user: userInfo, posts, comments } = useInfo();
+    const [selectedCat, setSelectedCat] = useState("posts");
+
+    const myPosts = posts?.filter(post => post.owner == userInfo?.id)
 
 
+    const upvotedPosts = posts?.filter(post => post.upvotes.includes(userInfo?.id))
+
+    const commented = comments?.filter(comm => comm.owner == userInfo?.id)
 
     const handleLogout = () => {
         auth.signOut()
     }
 
 
+    const cats = [
+        {
+            name: "posts",
+            icon: <><FaSignsPost /></>,
+        },
+        {
+            name: "upvotes",
+            icon: <><TbArrowBigUpLineFilled /></>,
+        },
+        {
+            name: "bookmarks",
+            icon: <><FaBookmark /></>,
+        },
+        {
+            name: "comments",
+            icon: <><FaCommentAlt /></>,
+        },
+    ]
 
-    const categs = ["posts", "upvotes", "bookmarks", "comments"]
-
-    const [selectedCat, setSelectedCat] = useState("posts");
 
     const renderCategoryContent = () => {
         switch (selectedCat) {
             case 'posts':
-                return <div>Posts Content</div>;
+                return <div>
+                    {
+                        myPosts && myPosts.map((post, index) => (
+                            <div key={index} className="mb-4">
+                                <Post post={post} />
+                            </div>
+                        ))
+                    }
+                </div>;
             case 'upvotes':
-                return <div>Upvotes Content</div>;
+                return <div>
+                    {
+                        upvotedPosts && upvotedPosts.map((post, index) => (
+                            <div key={index} className="mb-4">
+                                <Post post={post} />
+                            </div>
+                        ))
+                    }
+                </div>;
             case 'bookmarks':
                 return <div>
                     <Liked />
                 </div>;
             case 'comments':
-                return <div>Comments Content</div>;
+                return <div>
+
+                    {
+                        commented?.map((comm, index) => (
+                            <div key={index}>
+                                <p>{comm.comment}</p>
+                            </div>
+                        ))
+                    }
+                </div>;
             default:
                 return null;
         }
@@ -66,12 +114,12 @@ const Profile = () => {
                 }
 
                 <div className="mt-5 ">
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-around">
                         {
-                            categs.map((element, index) => (
-                                <button key={index} onClick={() => { setSelectedCat(element) }} >
+                            cats.map((category, index) => (
+                                <button key={index} onClick={() => { setSelectedCat(category.name) }} >
                                     <div className="bg-black text-white rounded-xl p-4">
-                                        {element}
+                                        {category.icon}
                                     </div>
                                 </button>
                             ))

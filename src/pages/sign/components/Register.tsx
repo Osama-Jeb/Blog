@@ -4,7 +4,7 @@ import { auth, db, storage } from "../../../firbase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { collection, doc, serverTimestamp, setDoc } from "firebase/firestore";
 
-import {v4 as uuidv4} from "uuid"
+import { v4 as uuidv4 } from "uuid"
 
 const Register = () => {
 
@@ -68,7 +68,16 @@ const Register = () => {
     return (
         <>
             <div className="flex flex-col items-center gap-4">
-                <input type="file" onChange={(e) => { setImage(e.target.files ? e.target.files[0] : null) }} />
+                <div>
+                    <label className="flex items-center justify-center w-12 text-3xl h-12 bg-black text-white rounded-full cursor-pointer">
+                        +
+                    </label>
+                    <input
+                        type="file"
+                        className="hidden"
+                        onChange={(e) => { setImage(e.target.files ? e.target.files[0] : null) }}
+                    />
+                </div>
                 <input type="text" placeholder="Username" onChange={(e) => { setUsername(e.target.value) }} value={username} required />
                 <input placeholder="Email" type="email" onChange={(e) => { setEmail(e.target.value) }} value={email} required />
                 <input placeholder="Password" type="password" onChange={(e) => { setPassword(e.target.value) }} value={password} required />

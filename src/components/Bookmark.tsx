@@ -13,9 +13,8 @@ type PoP = {
 
 const Bookmark = (props : PoP) => {
     const navigate = useNavigate();
-    const {users} = useInfo();
+    const {user} = useInfo();
     const {currentUser} = useAuth();
-    const user = users && Object.values(users).find(user => user.id === currentUser?.uid);
 
     const bookmark = async () => {
         if (!currentUser) {

@@ -2,6 +2,7 @@ import { PropsWithChildren, createContext, useContext, useEffect, useState } fro
 import { collection, onSnapshot } from 'firebase/firestore';
 import { db } from "../firbase";
 import { Comment, Post, User } from "../constants/types";
+import { useAuth } from "./AuthProvider";
 
 
 
@@ -11,17 +12,22 @@ type InfoData = {
     users: { [key: string]: User } | null;
     posts: Post[] | null;
     comments: Comment[] | null;
+    user: any;
 }
 
 const InfoContext = createContext<InfoData>({
     users: null,
     posts: null,
     comments: null,
+    user: null,
 })
 export default function InfoProvider({ children }: PropsWithChildren) {
     const [posts, setPosts] = useState<Post[]>([]);
     const [users, setUsers] = useState<{ [key: string]: User }>({});
     const [comments, setComments] = useState<Comment[]>([]);
+
+    const {currentUser} = useAuth();
+    const user = users && Object.values(users).find(user => user.id === currentUser?.uid);
 
     useEffect(() => {
 
@@ -61,7 +67,7 @@ export default function InfoProvider({ children }: PropsWithChildren) {
     }, [])
 
 
-    return <InfoContext.Provider value={{users, posts, comments}}>
+    return <InfoContext.Provider value={{users, posts, comments, user}}>
         {children}
     </InfoContext.Provider >
 }
