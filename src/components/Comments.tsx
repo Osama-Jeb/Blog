@@ -25,6 +25,8 @@ const Comments = (props: PoP) => {
         }
     };
 
+    const sortedComments = comments?.sort((a, b) => a.created_at - b.created_at);
+
 
     const addComment = async (id?: string) => {
 
@@ -66,7 +68,7 @@ const Comments = (props: PoP) => {
                 </button>
 
             </div>
-            {comments && comments.filter(comment => comment.postID === props.post?.id).map((element, index) => (
+            {sortedComments && sortedComments.filter(comment => comment.postID === props.post?.id).map((element, index) => (
                 <div key={index}>
                     <Comment comment={element} />
                 </div>

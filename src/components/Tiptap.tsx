@@ -18,49 +18,49 @@ const buttonConfigs = [
         isActive: (editor: any) => editor.isActive('italic'),
         icon: <FaItalic />,
         disabled: (editor: any) => !editor.can().chain().focus().toggleItalic().run(),
-        className: '',
+        className: 'text-black bg-transparent rounded-lg border-[1px] p-2 hover:bg-gray-300',
     },
     {
         action: (editor: any) => editor.chain().focus().toggleStrike().run(),
         isActive: (editor: any) => editor.isActive('strike'),
         icon: <FaStrikethrough />,
         disabled: (editor: any) => !editor.can().chain().focus().toggleStrike().run(),
-        className: '',
+        className: 'text-black bg-transparent rounded-lg border-[1px] p-2 hover:bg-gray-300',
     },
     {
         action: (editor: any) => editor.chain().focus().toggleBulletList().run(),
         isActive: (editor: any) => editor.isActive('bulletList'),
         icon: <FaListUl />,
-        className: '',
+        className: 'text-black bg-transparent rounded-lg border-[1px] p-2 hover:bg-gray-300',
     },
     {
         action: (editor: any) => editor.chain().focus().toggleOrderedList().run(),
         isActive: (editor: any) => editor.isActive('orderedList'),
         icon: <FaListOl />,
-        className: '',
+        className: 'text-black bg-transparent rounded-lg border-[1px] p-2 hover:bg-gray-300',
     },
     {
         action: (editor: any) => editor.chain().focus().toggleBlockquote().run(),
         isActive: (editor: any) => editor.isActive('blockquote'),
         icon: <FaQuoteLeft />,
-        className: '',
+        className: 'text-black bg-transparent rounded-lg border-[1px] p-2 hover:bg-gray-300',
     },
     {
         action: (editor: any) => editor.chain().focus().setHorizontalRule().run(),
         icon: 'Horizontal Line',
-        className: '',
+        className: 'text-black bg-transparent rounded-lg border-[1px] p-2 hover:bg-gray-300',
     },
     {
         action: (editor: any) => editor.chain().focus().undo().run(),
         icon: <FaUndo />,
         disabled: (editor: any) => !editor.can().chain().focus().undo().run(),
-        className: '',
+        className: 'text-black bg-transparent rounded-lg border-[1px] p-2 hover:bg-gray-300',
     },
     {
         action: (editor: any) => editor.chain().focus().redo().run(),
         icon: <FaRedo />,
         disabled: (editor: any) => !editor.can().chain().focus().redo().run(),
-        className: '',
+        className: 'text-black bg-transparent rounded-lg border-[1px] p-2 hover:bg-gray-300',
     },
 ];
 
@@ -68,7 +68,7 @@ const headingConfigs = [1, 2, 3, 4, 5, 6].map(level => ({
     action: (editor: any) => editor.chain().focus().toggleHeading({ level }).run(),
     isActive: (editor: any) => editor.isActive('heading', { level }),
     icon: `h${level}`,
-    className: '',
+    className: 'text-black bg-transparent rounded-lg border-[1px] p-2 hover:bg-gray-300',
 }));
 
 

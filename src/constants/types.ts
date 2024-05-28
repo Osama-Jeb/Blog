@@ -25,4 +25,6 @@ export type Comment = {
     owner: string;
     postID: string;
     comment: string;
+    created_at: any;
+    updated_at: any;
 }

@@ -85,7 +85,7 @@ const AddPost = () => {
 
     return (
         <>
-            <div className="addPost flex flex-col items-center gap-4 h-[100vh] justify-center w-[100vw]">
+            <div className="flex flex-col items-center gap-4 h-[100vh] justify-center w-[99vw]">
                 <input className=" border-2 border-gray-600 p-2 rounded-xl w-[50%]" placeholder='Title' type="text" value={title} onChange={(e) => { setTitle(e.target.value) }} />
 
                 <Tiptap setContent={setContent} />
