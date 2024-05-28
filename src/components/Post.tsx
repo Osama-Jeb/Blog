@@ -32,7 +32,7 @@ const Post = (props: PoP) => {
     const formatted = props.post && formatDistanceToNow(new Date(datestring), { addSuffix: true });
 
     return (
-        <div className="shadow-xl w-[50vw] bg-gray-200 rounded-xl p-3">
+        <div className="shadow-xl w-[70vw] bg-gray-200 rounded-xl p-3">
             <div className="flex items-center gap-3">
                 <img loading="lazy" className="rounded-full aspect-square" src={owner?.avatar} width={35} alt="" />
                 <p>{owner?.username}</p>

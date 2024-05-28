@@ -20,7 +20,7 @@ const AddPost = () => {
     const addPost = async () => {
         let imageUrl = '';
 
-        if(!currentUser) {
+        if (!currentUser) {
             alert('Please Sign In or Create an Account')
         }
 
@@ -85,12 +85,13 @@ const AddPost = () => {
 
     return (
         <>
-            <div className="flex flex-col items-center gap-4 h-[100vh] justify-center w-[99vw]">
-                <input className=" border-2 border-gray-600 p-2 rounded-xl w-[50%]" placeholder='Title' type="text" value={title} onChange={(e) => { setTitle(e.target.value) }} />
+            <div className="flex flex-col items-center gap-7 justify-center p-5">
+                <p className="text-xl font-semibold">Create Your Post Here: </p>
+                <input className=" border-2 border-gray-600 p-2 rounded-xl w-[52%]" placeholder='Title' type="text" value={title} onChange={(e) => { setTitle(e.target.value) }} />
 
                 <Tiptap setContent={setContent} />
 
-                    <input className=" w-[50%]" type="file" onChange={(e) => { setImage(e.target.files ? e.target.files[0] : null) }} />
+                <input className="w-[52%]" type="file" onChange={(e) => { setImage(e.target.files ? e.target.files[0] : null) }} />
 
                 {
                     image && <img src={URL.createObjectURL(image)} className="w-[50%] h-[40vh] aspect-square rounded-xl" alt="" />

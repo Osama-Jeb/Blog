@@ -59,11 +59,11 @@ const Comments = (props: PoP) => {
     return (
         <>
             <div className="flex items-center gap-3">
-                <input className="w-[90%] p-2 rounded-xl" type="text" placeholder='Comment' value={comment}
+                <input className="w-[95%] p-2 rounded-xl" type="text" placeholder='Comment' value={comment}
                     onChange={(e) => { setComment(e.target.value) }}
                     onKeyDown={handleKeyDown} />
 
-                <button className="text-3xl" onClick={() => { addComment(props.post?.id) }}>
+                <button className="text-3xl w-[5%]" onClick={() => { addComment(props.post?.id) }}>
                     <IoMdSend />
                 </button>
 

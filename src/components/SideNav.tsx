@@ -2,30 +2,44 @@ import { FaPlus, FaRegUserCircle } from "react-icons/fa";
 import { NavLink, useNavigate } from "react-router-dom";
 import { FaHornbill } from "react-icons/fa6";
 import { useAuth } from "../providers/AuthProvider";
+import { useEffect, useState } from "react";
 
 const SideNav = () => {
 
     const navigate = useNavigate();
     const { currentUser } = useAuth();
+    const [term, setTerm] = useState('');
 
     const onSearch = () => {
-        //TODO send the variable to this page then filter the posts
-        navigate('/home')
+        if (term) {
+            navigate('/home', { state: { term } });
+        }
     }
 
+    useEffect(() => {
+        navigate('/home', { state: { term } });
+    }, [term]);
+
     return (
-        // <nav className="fixed top-0 left-0 flex text-[4vh] pt-4 gap-4 flex-col h-[7vh] hover:h-[100vh] bg-black text-white w-[5vw] hover:w-[10vw] group">
         <nav className="bg-black text-white flex items-center justify-between py-3 px-6">
 
             <NavLink className="text-4xl hover:rotate-180" to={"/home"}>
                 <FaHornbill />
             </NavLink>
-
-            <input type="text" className="rounded-full w-[60%]" placeholder="Search" onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                    onSearch();
-                }
-            }} />
+            <div className=" w-[60%]">
+                <input
+                    type="text"
+                    value={term}
+                    className="rounded-full w-full text-black pl-4 pr-20 py-2"
+                    placeholder="Search"
+                    onChange={(e) => { setTerm(e.target.value); }}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                            onSearch();
+                        }
+                    }}
+                />
+            </div>
 
             <div className="flex items-center gap-4 text-3xl">
                 {
