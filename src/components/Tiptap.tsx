@@ -96,6 +96,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
 };
 
 type TipProp = {
+    content: string;
     setContent: (content: string) => void;
 }
 
@@ -103,7 +104,7 @@ const Tiptap = (props : TipProp) => {
 
     const editor = useEditor({
         extensions: [StarterKit],
-        content: "<p>Write Something Here</p>",
+        content: props.content,
         onUpdate({ editor }) {
             props.setContent(editor.getHTML())
         }

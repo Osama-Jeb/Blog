@@ -51,7 +51,7 @@ const Post = (props: PoP) => {
                 </div>
             </NavLink>
             <hr />
-            <div className="flex items-center gap-7 text-xl">
+            <div className="flex items-center gap-7 text-xl w-[50%]">
 
                 <UpvoteDownvote post={props.post} />
 

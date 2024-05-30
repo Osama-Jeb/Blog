@@ -53,7 +53,7 @@ const Register = () => {
                 throw error;
             }
         } else {
-            return "https://firebasestorage.googleapis.com/v0/b/blog-ea5da.appspot.com/o/posts%2Favatars%2FuserAvatar.png?alt=media&token=1d3c9557-3f4f-4f74-add6-fac644d40eb2";
+            return "https://firebasestorage.googleapis.com/v0/b/blog-ea5da.appspot.com/o/avatars%2FuserAvatar.png?alt=media&token=c24214a3-b611-42df-889b-66f8b314ed27";
         }
     }
 

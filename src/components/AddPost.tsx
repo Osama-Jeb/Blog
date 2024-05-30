@@ -89,7 +89,7 @@ const AddPost = () => {
                 <p className="text-xl font-semibold">Create Your Post Here: </p>
                 <input className=" border-2 border-gray-600 p-2 rounded-xl w-[52%]" placeholder='Title' type="text" value={title} onChange={(e) => { setTitle(e.target.value) }} />
 
-                <Tiptap setContent={setContent} />
+                <Tiptap content={content} setContent={setContent} />
 
                 <input className="w-[52%]" type="file" onChange={(e) => { setImage(e.target.files ? e.target.files[0] : null) }} />
 

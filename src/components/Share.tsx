@@ -41,10 +41,10 @@ const Share = (props: PoP) => {
                 <CiShare2 />
             </button>
 
-            <Modal dismissible show={openModal} onClose={() => setOpenModal(false)}>
+            <Modal dismissible size="sm" className="w-[50vw] p-4 mx-auto" show={openModal} onClose={() => setOpenModal(false)}>
                 <Modal.Header className="p-2">Share This Post : {props.post?.title}</Modal.Header>
 
-                <Modal.Body>
+                <Modal.Body >
                     <div className="p-3 flex items-center justify-around gap-4 flex-wrap">
 
                         <button className="text-2xl" onClick={() => { navigator.clipboard.writeText("https://myblogproject.vercel.app/post/" + props.post?.id) }}>
