@@ -91,7 +91,7 @@ const AddPost = () => {
 
                 <Tiptap content={content} setContent={setContent} />
 
-                <input className="w-[52%]" type="file" onChange={(e) => { setImage(e.target.files ? e.target.files[0] : null) }} />
+                <input className="w-[51%]" type="file" onChange={(e) => { setImage(e.target.files ? e.target.files[0] : null) }} />
 
                 {
                     image && <img src={URL.createObjectURL(image)} className="w-[50%] h-[40vh] aspect-square rounded-xl" alt="" />

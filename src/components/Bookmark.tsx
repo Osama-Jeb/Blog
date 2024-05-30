@@ -52,7 +52,7 @@ const Bookmark = (props : PoP) => {
 
     return (
         <>
-            <button onClick={bookmark}>
+            <button onClick={bookmark} className="bg-[#2a3236] px-4  py-2 hover:bg-[#333d42] rounded-full text-2xl">
                 {
                     user?.bookmark.includes(props.post?.id || "") ?
                         <>

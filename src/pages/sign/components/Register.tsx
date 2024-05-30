@@ -84,7 +84,7 @@ const Register = () => {
 
     return (
         <>
-            <div className="flex flex-col items-center gap-4 w-[50%]">
+            <div className="flex flex-col items-center gap-4 ">
                 <label htmlFor="file-input" className="flex items-center justify-center w-20 text-5xl font-bold h-20 bg-black text-white rounded-full cursor-pointer">
                     {imagePreview ? (
                         <img src={imagePreview} alt="Selected" className="w-20 h-20 rounded-full aspect-square" />
@@ -99,10 +99,10 @@ const Register = () => {
                     accept="image/png, image/jpeg"
                     onChange={handleImageChange}
                 />
-                <input className="w-[50%] rounded" type="text" placeholder="Username" onChange={(e) => setUsername(e.target.value)} value={username} required />
-                <input className="w-[50%] rounded" placeholder="example@email.com" type="email" onChange={(e) => setEmail(e.target.value)} value={email} required />
-                <input className="w-[50%] rounded" placeholder="Password" type="password" onChange={(e) => setPassword(e.target.value)} value={password} required />
-                <button className="w-[50%] bg-black text-white px-4 py-2 rounded" disabled={loading} onClick={register}>
+                <input className="w-full rounded" type="text" placeholder="Username" onChange={(e) => setUsername(e.target.value)} value={username} required />
+                <input className="w-full rounded" placeholder="example@email.com" type="email" onChange={(e) => setEmail(e.target.value)} value={email} required />
+                <input className="w-full rounded" placeholder="Password" type="password" onChange={(e) => setPassword(e.target.value)} value={password} required />
+                <button className="w-full bg-black text-white px-4 py-2 rounded" disabled={loading} onClick={register}>
                     {loading ? (
                         <div role="status" className="flex items-center justify-center gap-3">
                             <svg aria-hidden="true" className="w-6 h-6 text-gray-200 animate-spin dark:text-gray-600 fill-white" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">

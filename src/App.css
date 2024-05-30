@@ -4,6 +4,17 @@ nav {
     }
 }
 
+.dangerous {
+    * {
+        color: white !important;
+    }
+
+    li::marker {
+        color: white !important;
+    }
+}
+
+
 /* width */
 ::-webkit-scrollbar {
     width: 0.25vw;
@@ -19,6 +30,14 @@ nav {
     background: #1d4ed8;
 }
 
+#animated-modal-container #animated-modal-background {
+    opacity: 1 !important;
+}
+
+#animated-modal-container #animated-modal-background #animated-modal {
+    padding: 30px !important;
+    border-radius: 20px !important;
+}
 
 /**** TIPTAP */
 

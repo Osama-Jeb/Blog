@@ -3,9 +3,10 @@ import { db } from "../firbase";
 import { Comment as CommentType } from "../constants/types";
 import { useAuth } from "../providers/AuthProvider";
 import { useInfo } from "../providers/InfoProvider";
-import { FaRegTrashAlt, FaCheck } from "react-icons/fa";
-import { LuPenLine } from "react-icons/lu";
 import { useState } from "react";
+import { BsThreeDotsVertical } from "react-icons/bs";
+import { MdOutlineCancel } from "react-icons/md";
+import { FaRegCheckCircle } from "react-icons/fa";
 
 type CoP = {
     comment: CommentType
@@ -29,6 +30,7 @@ const Comment = (props: CoP) => {
                 console.log(error)
             }
         }
+        setShowMenu(false)
     }
 
     const updateComment = async (id: string) => {
@@ -46,42 +48,72 @@ const Comment = (props: CoP) => {
         }
     }
 
+    const [showMenu, setShowMenu] = useState(false)
+    const toggleMenu = () => {
+        setShowMenu(!showMenu)
+    }
+
+
     return (
-        <div key={props.comment.id} className="bg-gray-100 flex items-center justify-between rounded-md shadow-sm my-4 p-4">
-            <div>
+        <div key={props.comment.id} className="flex items-center justify-between rounded-md shadow-sm my-4 p-4">
+            <div className="w-full">
                 <div className="flex items-center gap-3">
                     <img className="rounded-full w-6 h-6" src={commenter?.avatar} alt="" />
                     <p className="text-sm">{commenter?.username}</p>
                 </div>
-                <div className="w-full">
-                    {
-                        isUpdating ?
-                            <input className="rounded ml-8 mt-1 w-full" type="text" value={updatedComment} onChange={(e) => { setUpdatedComment(e.target.value) }} />
-                            :
-                            <p className="ml-8 py-2 mt-1">{props.comment.comment}</p>
-                    }
-                </div>
+                {
+                    isUpdating ?
+                        <div className="w-full flex items-center">
+                            <input
+                                className="ml-8 mt-1 w-[89%] bg-[#272727] text-white rounded-full " type="text"
+                                value={updatedComment} onChange={(e) => { setUpdatedComment(e.target.value) }}
+
+                            />
+                            <div className="flex items-center gap-1">
+                                <button
+                                    className="text-2xl text-red-600"
+                                    onClick={() => { setIsUpdating(false) }}
+                                >
+                                    <MdOutlineCancel />
+                                </button>
+                                <button
+                                className="text-green-500 text-xl"
+                                    onClick={() => { updateComment(props.comment.id) }}
+                                >
+                                    <FaRegCheckCircle />
+                                </button>
+                            </div>
+                        </div>
+                        :
+                        <p className="ml-8 py-2 mt-1">{props.comment.comment}</p>
+                }
             </div>
             {props.comment.owner === currentUser?.uid && (
-                <div >
-                    {
-                        isUpdating ?
-                            <>
-                                <button className="text-green-600 text-lg " onClick={() => { updateComment(props.comment.id) }}>
-                                    <FaCheck />
+                isUpdating ?
+                    null
+                    :
+                    <div className="relative">
+                        <button className="cursor-pointer hover:bg-[#333d42] p-1 rounded-full" onClick={toggleMenu}>
+                        <BsThreeDotsVertical />
+
+                        </button>
+                        {showMenu && (
+                            <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
+                                <button
+                                    className="block w-full text-left rounded-xl px-4 py-2 text-sm text-gray-700 hover:bg-gray-200"
+                                    onClick={() => { setIsUpdating(true); setShowMenu(false) }}
+                                >
+                                    Update Comment
                                 </button>
-                            </>
-                            :
-                            <>
-                                <button className="text-green-600 text-lg " onClick={() => { setIsUpdating(!isUpdating) }}>
-                                    <LuPenLine />
+                                <button
+                                    className="block w-full text-left rounded-xl px-4 py-2 text-sm text-gray-700 hover:bg-gray-200"
+                                    onClick={() => { deleteComment(props.comment.id) }}
+                                >
+                                    Delete Comment
                                 </button>
-                            </>
-                    }
-                    <button className="text-red-600 text-lg ml-2" onClick={() => { deleteComment(props.comment.id) }}>
-                        <FaRegTrashAlt />
-                    </button>
-                </div>
+                            </div>
+                        )}
+                    </div>
             )}
         </div>
     )

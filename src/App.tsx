@@ -2,11 +2,10 @@ import { Route, Routes } from "react-router-dom";
 import "./App.css"
 import SideNav from "./components/SideNav"
 import Home from "./pages/home/Home";
-import Liked from "./pages/liked/Liked";
-import Sign from "./pages/sign/Sign";
 import AddPost from "./components/AddPost";
 import PostPage from "./pages/post/PostPage";
-// import UsersNav from "./components/UsersNav";
+import Settings from "./pages/settings/Settings";
+import Profile from "./pages/sign/components/Profile";
 
 const App = () => {
     return (
@@ -14,13 +13,11 @@ const App = () => {
             <SideNav />
             <Routes>
                 <Route path="/" element={<Home />} />
-                <Route path="/home" element={<Home />} />
-                <Route path="/sign" element={<Sign />} />
-                <Route path="/liked" element={<Liked />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/settings" element={<Settings />} />
                 <Route path="/addPost" element={<AddPost />} />
                 <Route path="/post/:id" element={<PostPage />} />
             </Routes>
-            {/* <UsersNav /> */}
         </>
     )
 }

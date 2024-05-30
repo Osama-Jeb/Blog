@@ -29,10 +29,10 @@ interface PostActionsProps {
 const PostPage = () => {
     const id = useParams();
     const { users, posts, comments } = useInfo();
+    const [isUpdating, setIsUpdating] = useState(false);
     const { currentUser } = useAuth();
     const myPost = posts?.filter(post => post.id === id.id)[0];
 
-    const [isUpdating, setIsUpdating] = useState(false);
 
     const PostActions = ({ myPost, currentUser, deletePost }: PostActionsProps) => {
         const [showMenu, setShowMenu] = useState(false);
@@ -59,16 +59,16 @@ const PostPage = () => {
                         {showMenu && (
                             <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
                                 <button
-                                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                    onClick={handleDelete}
-                                >
-                                    Delete Post
-                                </button>
-                                <button
-                                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                    className="block w-full text-left rounded-xl px-4 py-2 text-sm text-gray-700 hover:bg-gray-200"
                                     onClick={handleUpdate}
                                 >
                                     Update Post
+                                </button>
+                                <button
+                                    className="block w-full text-left rounded-xl px-4 py-2 text-sm text-gray-700 hover:bg-gray-200"
+                                    onClick={handleDelete}
+                                >
+                                    Delete Post
                                 </button>
                             </div>
                         )}
@@ -77,6 +77,7 @@ const PostPage = () => {
             </div>
         );
     };
+
     const filteredComments = comments?.filter(comment => comment.postID === myPost?.id);
     const owner = users && Object.values(users).find(user => user.id === myPost?.owner);
 
@@ -171,7 +172,7 @@ const PostPage = () => {
                             }
 
                             <button
-                            className="bg-green-500 px-4 py-2 rounded"
+                                className="bg-green-500 px-4 py-2 rounded"
                                 onClick={() => { updatePost(myPost?.id) }}
                             >
 
@@ -195,9 +196,9 @@ const PostPage = () => {
                         </>
                         :
                         <>
-                            <div className="flex items-center justify-center min-h-[75vh] mt-4">
-                                <div className="shadow-xl w-[65vw] bg-slate-300 rounded-xl p-3">
-                                    <div className="flex items-center justify-between p-2">
+                            <div className="flex justify-center min-h-[100vh]">
+                                <div className="bg-[#272727] w-[60vw] p-4">
+                                    <div className="flex items-center justify-between p-4">
                                         <div className="flex items-center gap-3">
                                             <img loading="lazy" className="rounded-full aspect-square" src={owner?.avatar} width={35} alt="user avatar" />
                                             <p>{owner?.username}</p>
@@ -215,7 +216,10 @@ const PostPage = () => {
                                         <p className="text-3xl font-bold">{myPost?.title}</p>
                                         <br />
                                         {myPost?.content && (
-                                            <div className="text-lg prose" dangerouslySetInnerHTML={{ __html: myPost.content }}></div>
+                                            <div className="text-lg prose dangerous"
+                                                dangerouslySetInnerHTML={{ __html: myPost.content }}
+
+                                            ></div>
                                         )}
                                     </div>
                                     {myPost?.imageUrl && (
@@ -224,7 +228,7 @@ const PostPage = () => {
                                     <div className="flex items-center gap-7 text-xl p-2">
                                         <UpvoteDownvote post={myPost} />
                                         <NavLink to={`/post/${myPost?.id}`}>
-                                            <div className="flex items-center gap-1 hover:bg-gray-400 p-1 rounded">
+                                            <div className="flex items-center gap-1 bg-[#2a3236] px-3  py-1 hover:bg-[#333d42] rounded-full">
                                                 <GoCommentDiscussion />
                                                 {filteredComments?.length}
                                             </div>

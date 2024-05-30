@@ -32,10 +32,10 @@ const Post = (props: PoP) => {
     const formatted = props.post && formatDistanceToNow(new Date(datestring), { addSuffix: true });
 
     return (
-        <div className="shadow-xl w-[70vw] bg-gray-200 rounded-xl p-3">
-            <div className="flex items-center gap-3">
+        <div className="w-[60vw] p-3 hover:bg-[#181c1f] rounded-xl">
+            <div className="flex items-center gap-3 mb-2">
                 <img loading="lazy" className="rounded-full aspect-square" src={owner?.avatar} width={35} alt="" />
-                <p>{owner?.username}</p>
+                <p>u/{owner?.username}</p>
                 <p>{formatted}</p>
             </div>
             <NavLink to={`/post/${props.post.id}`}>
@@ -50,14 +50,13 @@ const Post = (props: PoP) => {
                     }
                 </div>
             </NavLink>
-            <hr />
-            <div className="flex items-center gap-7 text-xl w-[50%]">
+            <div className="flex items-center gap-7 text-xl mt-3 w-[50%]">
 
                 <UpvoteDownvote post={props.post} />
 
                 <NavLink to={`/post/${props.post.id}`}>
 
-                    <div className="flex items-center gap-1 hover:bg-gray-400 p-1 rounded">
+                    <div className="flex items-center gap-1 bg-[#2a3236] px-3  py-1 hover:bg-[#333d42] rounded-full">
                         <GoCommentDiscussion />
                         {filteredComments?.length}
                     </div>
@@ -68,6 +67,7 @@ const Post = (props: PoP) => {
                 <Bookmark post={props.post} />
 
             </div>
+            <hr className="mt-2" />
         </div>
     )
 }

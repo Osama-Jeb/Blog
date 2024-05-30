@@ -3,7 +3,7 @@ import { Post as PostProps } from "../constants/types"
 import { useAuth } from "../providers/AuthProvider";
 import { arrayRemove, arrayUnion, collection, doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "../firbase";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 
 type PoP = {
     post: PostProps | undefined
@@ -14,11 +14,12 @@ const UpvoteDownvote = (props: PoP) => {
     
     const { currentUser } = useAuth();
     const difference = (props.post?.upvotes.length ?? 0) - (props.post?.downvotes.length ?? 0)
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
     const toggleVote = async (voteType: 'upvote' | 'downvote') => {
         if (!currentUser) {
-            navigate('/sign')
+            // navigate('/sign')
+            alert('You Need An Account')
         }
 
         try {
@@ -78,9 +79,9 @@ const UpvoteDownvote = (props: PoP) => {
     return (
         <>
 
-            <div className="flex items-center p-2 gap-1">
+            <div className="flex items-center justify-between  gap-1 rounded-full bg-[#2a3236]">
                 <button onClick={() => { toggleVote('upvote') }}
-                    className={`${props.post?.upvotes.includes(currentUser?.uid) ? 'text-red-700' : ''}`}
+                    className={`${props.post?.upvotes.includes(currentUser?.uid) ? 'text-red-700' : ''} hover:bg-[#333d42] rounded-full p-2`}
                 >
                     <TbArrowBigUpLineFilled />
                 </button>
@@ -88,7 +89,7 @@ const UpvoteDownvote = (props: PoP) => {
                 <span>{difference} </span>
 
                 <button onClick={() => { toggleVote('downvote') }}
-                    className={`${props.post?.downvotes.includes(currentUser?.uid) ? 'text-blue-500' : ''}`}
+                    className={`${props.post?.downvotes.includes(currentUser?.uid) ? 'text-blue-500' : ''} hover:bg-[#333d42] rounded-full p-2`}
                 >
                     <TbArrowBigDownLineFilled />
                 </button>
