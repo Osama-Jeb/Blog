@@ -1,22 +1,28 @@
-import { FaBars, FaPlus, FaRegUserCircle, FaTimes } from "react-icons/fa";
-import { NavLink, useNavigate } from "react-router-dom";
-import { FaGear, FaHornbill } from "react-icons/fa6";
 import { useAuth } from "../providers/AuthProvider";
+import { useInfo } from "../providers/InfoProvider";
 import { useRef, useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 
-import { AnimatedModal, AnimatedModalObject, ModalAnimation } from "@dorbus/react-animated-modal"
-import Login from "../pages/sign/components/Login";
-import Register from "../pages/sign/components/Register";
+import { FaBars, FaPlus, FaRegUserCircle, FaTimes } from "react-icons/fa";
+import { FaGear, FaHornbill } from "react-icons/fa6";
+
 import { auth } from "../firbase";
 
-const SideNav = () => {
+import Login from "../pages/sign/components/Login";
+import Register from "../pages/sign/components/Register";
 
-    const navigate = useNavigate();
+import { AnimatedModal, AnimatedModalObject, ModalAnimation } from "@dorbus/react-animated-modal"
+
+const SideNav = () => {
     const { currentUser } = useAuth();
+    const { user: userInfo } = useInfo();
+    const navigate = useNavigate();
+
     const [menuOpen, setMenuOpen] = useState(false);
     const [showSet, setShowSet] = useState(false);
     const [isNewUser, setIsNewUser] = useState(false);
     const [term, setTerm] = useState('');
+
     const ref = useRef<AnimatedModalObject>(null);
 
     const onSearch = () => {
@@ -31,20 +37,19 @@ const SideNav = () => {
 
     return (
         <nav className="bg-black text-white flex items-center justify-between py-3 px-6">
-
             <NavLink className="text-4xl hover:rotate-180" to={"/"}>
                 <FaHornbill />
             </NavLink>
 
             <div className="hidden md:flex w-[60%]">
-
                 <div className="relative w-full">
                     <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                         <svg className="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                             <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
                         </svg>
                     </div>
-                    <input type="search" id="search" className="block w-full p-3 ps-10 text-sm text-gray-900 border border-gray-300 rounded-full bg-gray-50" placeholder="Search" required
+                    <input type="search" id="search" placeholder="Search" required
+                        className="block w-full p-3 ps-10 text-sm text-gray-900 border border-gray-300 rounded-full bg-gray-50"
                         onChange={(e) => { setTerm(e.target.value); }}
                         onKeyDown={(e) => {
                             if (e.key === 'Enter') {
@@ -89,7 +94,10 @@ const SideNav = () => {
 
                         <div className="relative">
                             <button onClick={() => setShowSet(!showSet)}>
-                                <FaRegUserCircle />
+
+                                {
+                                    userInfo && <img src={userInfo.avatar} width={30} className="aspect-square rounded-full" alt="user avatar" />
+                                }
 
                             </button>
                             {
@@ -105,8 +113,8 @@ const SideNav = () => {
                                         </NavLink>
 
                                         <button
-                                        onClick={handleLogout}
-                                        className="bg-red-600 w-full py-1 rounded text-white font-semibold"
+                                            onClick={handleLogout}
+                                            className="bg-red-600 w-full py-1 rounded text-white font-semibold"
                                         >
                                             Log Out
                                         </button>
@@ -129,6 +137,7 @@ const SideNav = () => {
                         Log in
                     </button>
             }
+
 
             {menuOpen && (
                 <div className="absolute top-16 left-0 w-full bg-black text-white flex flex-col items-center space-y-4 py-4 md:hidden">

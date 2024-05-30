@@ -70,13 +70,13 @@ const MenuBar = ({ editor }: { editor: any }) => {
     }
 
     return (
-        <div className='flex items-center flex-wrap w-[52%] gap-2'>
+        <div className='flex items-center flex-wrap gap-2  text-[#eef1f3]'>
             {buttonConfigs.map(({ action, isActive, icon, disabled }, index) => (
                 <button
                     key={index}
                     onClick={() => action(editor)}
                     disabled={disabled ? disabled(editor) : false}
-                    className={`${isActive && isActive(editor) ? 'is-active' : ''} text-black bg-transparent rounded-lg border-[1px] p-2 hover:bg-gray-300`}
+                    className={`${isActive && isActive(editor) ? 'is-active' : ''}  bg-transparent rounded-lg border-[1px] p-2 hover:bg-gray-800`}
                 >
                     {icon}
                 </button>
@@ -86,7 +86,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
                 <button
                     key={index}
                     onClick={() => action(editor)}
-                    className={`${isActive(editor) ? 'is-active' : ''} text-black bg-transparent rounded-lg border-[1px] p-2 hover:bg-gray-300`}
+                    className={`${isActive(editor) ? 'is-active' : ''}  bg-transparent rounded-lg border-[1px] p-2 hover:bg-gray-800`}
                 >
                     {icon}
                 </button>
@@ -100,7 +100,7 @@ type TipProp = {
     setContent: (content: string) => void;
 }
 
-const Tiptap = (props : TipProp) => {
+const Tiptap = (props: TipProp) => {
 
     const editor = useEditor({
         extensions: [StarterKit],
@@ -112,7 +112,10 @@ const Tiptap = (props : TipProp) => {
     return (
         <>
             <MenuBar editor={editor} />
-            <EditorContent className='prose-lg' editor={editor} />
+            <EditorContent
+                className='prose-lg'
+                editor={editor}
+            />
         </>
     )
 }

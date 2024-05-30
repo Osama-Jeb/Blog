@@ -44,6 +44,9 @@ nav {
 .tiptap {
     width: 50vw;
     min-height: 20vh;
-    border: 1px solid black;
-    border-radius: 5px;
+    background-color: #272727;
+    color: #eef1f3;
+    border-radius: 25px;
+    padding: 15px;
+    
 }

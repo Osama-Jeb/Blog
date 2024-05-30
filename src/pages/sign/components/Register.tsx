@@ -1,8 +1,10 @@
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useState } from "react";
+
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { auth, db, storage } from "../../../firbase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { collection, doc, serverTimestamp, setDoc } from "firebase/firestore";
+
 import { v4 as uuidv4 } from "uuid";
 
 const Register = () => {
@@ -17,20 +19,19 @@ const Register = () => {
         if (e.target.files && e.target.files[0]) {
             const file = e.target.files[0];
     
-            // Check file type
+            // file type
             if (!file.type.startsWith('image/')) {
                 alert('Please select a valid image file (PNG or JPEG/JPG).');
                 return;
             }
     
-            // Check file size
+            // file size
             const maxSizeInBytes = 2 * 1024 * 1024; // 2 megabytes
             if (file.size > maxSizeInBytes) {
                 alert('Please select a file smaller than 2 megabytes.');
                 return;
             }
     
-            // File is valid, set the image state and create a preview
             setImage(file);
             setImagePreview(URL.createObjectURL(file));
         }
@@ -99,9 +100,11 @@ const Register = () => {
                     accept="image/png, image/jpeg"
                     onChange={handleImageChange}
                 />
+
                 <input className="w-full rounded" type="text" placeholder="Username" onChange={(e) => setUsername(e.target.value)} value={username} required />
                 <input className="w-full rounded" placeholder="example@email.com" type="email" onChange={(e) => setEmail(e.target.value)} value={email} required />
                 <input className="w-full rounded" placeholder="Password" type="password" onChange={(e) => setPassword(e.target.value)} value={password} required />
+                
                 <button className="w-full bg-black text-white px-4 py-2 rounded" disabled={loading} onClick={register}>
                     {loading ? (
                         <div role="status" className="flex items-center justify-center gap-3">

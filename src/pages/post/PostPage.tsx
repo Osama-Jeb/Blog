@@ -1,85 +1,54 @@
-import { NavLink, useParams } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { useInfo } from "../../providers/InfoProvider";
 import { useAuth } from "../../providers/AuthProvider";
-import { Post as PostProps } from "../../constants/types"
+
 import { deleteObject, getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { db, storage } from "../../firbase";
 import { collection, deleteDoc, doc, serverTimestamp, updateDoc } from "firebase/firestore";
+
+import { Post as PostProps } from "../../constants/types";
+
+import UpvoteDownvote from "../../components/UpvoteDownvote";
 import Comments from "../../components/Comments";
 import Share from "../../components/Share";
-
-import { BsThreeDotsVertical } from "react-icons/bs";
-import UpvoteDownvote from "../../components/UpvoteDownvote";
-import { GoCommentDiscussion } from "react-icons/go";
 import Bookmark from "../../components/Bookmark";
-
-import { formatDistanceToNow } from "date-fns";
-import { useState } from "react";
 import Tiptap from "../../components/Tiptap";
 
+import { BsThreeDotsVertical } from "react-icons/bs";
+import { GoCommentDiscussion } from "react-icons/go";
+
+import { formatDistanceToNow } from "date-fns";
 import { v4 as uuidv4 } from "uuid"
 
-
-interface PostActionsProps {
-    myPost: PostProps | undefined;
-    currentUser: any;
-    deletePost: (post: PostProps | undefined) => void;
-}
 
 const PostPage = () => {
     const id = useParams();
     const { users, posts, comments } = useInfo();
-    const [isUpdating, setIsUpdating] = useState(false);
     const { currentUser } = useAuth();
+    const navigate = useNavigate();
+
+    const [showMenu, setShowMenu] = useState(false);
+    const [isUpdating, setIsUpdating] = useState(false);
+
     const myPost = posts?.filter(post => post.id === id.id)[0];
-
-
-    const PostActions = ({ myPost, currentUser, deletePost }: PostActionsProps) => {
-        const [showMenu, setShowMenu] = useState(false);
-
-        const toggleMenu = () => {
-            setShowMenu(!showMenu);
-        };
-
-        const handleDelete = () => {
-            deletePost(myPost);
-            setShowMenu(false); // Close the menu after the action
-        };
-
-        const handleUpdate = () => {
-            setShowMenu(false); // Close the menu after the action
-            setIsUpdating(true)
-        };
-
-        return (
-            <div className="relative">
-                {myPost?.owner == currentUser?.uid && (
-                    <div>
-                        <BsThreeDotsVertical className="cursor-pointer" onClick={toggleMenu} />
-                        {showMenu && (
-                            <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
-                                <button
-                                    className="block w-full text-left rounded-xl px-4 py-2 text-sm text-gray-700 hover:bg-gray-200"
-                                    onClick={handleUpdate}
-                                >
-                                    Update Post
-                                </button>
-                                <button
-                                    className="block w-full text-left rounded-xl px-4 py-2 text-sm text-gray-700 hover:bg-gray-200"
-                                    onClick={handleDelete}
-                                >
-                                    Delete Post
-                                </button>
-                            </div>
-                        )}
-                    </div>
-                )}
-            </div>
-        );
-    };
-
     const filteredComments = comments?.filter(comment => comment.postID === myPost?.id);
+
     const owner = users && Object.values(users).find(user => user.id === myPost?.owner);
+
+    // Post Age
+    const datestring = myPost?.created_at.toDate().toString();
+    const formatted = myPost && formatDistanceToNow(new Date(datestring), { addSuffix: true });
+
+    // updating post 
+    const [title, setTitle] = useState(myPost?.title);
+    const [content, setContent] = useState(myPost?.content);
+    const [image, setImage] = useState<any>(myPost?.imageUrl);
+    const [loading, setLoading] = useState(false);
+
+    const toggleMenu = () => {
+        setShowMenu(!showMenu);
+    };
 
     const deletePost = async (post: PostProps | undefined) => {
         if (confirm("Are You Sure You Want To Delete This Post")) {
@@ -88,7 +57,7 @@ const PostPage = () => {
                     const uuid = post?.imageUrl.slice(77, 113);
                     const imageRef = ref(storage, 'posts/' + uuid)
                     deleteObject(imageRef).then(() => { console.log("image deleted") })
-
+                    navigate('/')
                 }
                 const postRef = doc(collection(db, 'posts'), post?.id)
                 await deleteDoc(postRef);
@@ -98,15 +67,6 @@ const PostPage = () => {
             }
         }
     }
-
-    const datestring = myPost?.created_at.toDate().toString();
-    const formatted = myPost && formatDistanceToNow(new Date(datestring), { addSuffix: true });
-
-    const [title, setTitle] = useState(myPost?.title);
-    const [content, setContent] = useState(myPost?.content);
-    const [image, setImage] = useState<any>(myPost?.imageUrl);
-    const [loading, setLoading] = useState(false);
-
 
     const uploadImage = async (): Promise<string> => {
         if (!image) {
@@ -160,25 +120,26 @@ const PostPage = () => {
             {
                 myPost ? (
                     isUpdating ?
-                        <>
-                            <input className=" border-2 border-gray-600 p-2 rounded-xl w-[52%]" placeholder='Title' type="text" value={title} onChange={(e) => { setTitle(e.target.value) }} />
+                        <div className="flex justify-center min-h-[100vh] mt-3 p-4">
+                            <div className="flex items-center flex-col gap-3">
+                                <button onClick={() => {setIsUpdating(false)}} className="px-4 py-2 bg-red-600 rounded">Cancel Update</button>
+                                <input className="bg-[#272727] w-full text-[#eef1f3] rounded-full py-3" placeholder='Title' type="text" value={title} onChange={(e) => { setTitle(e.target.value) }} />
 
-                            <Tiptap content={content ? content : ""} setContent={setContent} />
+                                <Tiptap content={content ? content : ""} setContent={setContent} />
 
-                            <input className="w-[52%]" type="file" onChange={(e) => { setImage(e.target.files ? e.target.files[0] : null) }} />
-
-                            {
-                                image && <img src={image} className="w-[50%] h-[40vh] aspect-square rounded-xl" alt="" />
-                            }
-
-                            <button
-                                className="bg-green-500 px-4 py-2 rounded"
-                                onClick={() => { updatePost(myPost?.id) }}
-                            >
+                                <input className="w-full" type="file" onChange={(e) => { setImage(e.target.files ? e.target.files[0] : null) }} />
 
                                 {
-                                    loading ?
-                                        <>
+                                    image && <img src={image} className="w-full h-[40vh] aspect-square rounded-xl" alt="Post Image" />
+                                }
+
+                                <button
+                                    className="bg-green-500 w-full px-4 py-2 rounded"
+                                    onClick={() => { updatePost(myPost?.id) }}
+                                >
+
+                                    {
+                                        loading ?
                                             <div role="status" className="flex items-center justify-center gap-3">
                                                 <svg aria-hidden="true" className="w-6 h-6 text-gray-200 animate-spin dark:text-gray-600 fill-white" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor" />
@@ -186,66 +147,79 @@ const PostPage = () => {
                                                 </svg>
                                                 <p>....Loading</p>
                                             </div>
-                                        </>
-                                        :
-                                        <>
-                                            Update Post
-                                        </>
-                                }
-                            </button>
-                        </>
-                        :
-                        <>
-                            <div className="flex justify-center min-h-[100vh]">
-                                <div className="bg-[#272727] w-[60vw] p-4">
-                                    <div className="flex items-center justify-between p-4">
-                                        <div className="flex items-center gap-3">
-                                            <img loading="lazy" className="rounded-full aspect-square" src={owner?.avatar} width={35} alt="user avatar" />
-                                            <p>{owner?.username}</p>
-                                            <p>{formatted}</p>
-                                        </div>
-                                        <div className="">
-                                            <PostActions
-                                                myPost={myPost}
-                                                currentUser={currentUser}
-                                                deletePost={deletePost}
-                                            />
-                                        </div>
-                                    </div>
-                                    <div className="p-4">
-                                        <p className="text-3xl font-bold">{myPost?.title}</p>
-                                        <br />
-                                        {myPost?.content && (
-                                            <div className="text-lg prose dangerous"
-                                                dangerouslySetInnerHTML={{ __html: myPost.content }}
 
-                                            ></div>
-                                        )}
-                                    </div>
-                                    {myPost?.imageUrl && (
-                                        <img loading="lazy" src={myPost?.imageUrl} className="rounded-xl w-full h-[350px]" alt={myPost?.title} />
-                                    )}
-                                    <div className="flex items-center gap-7 text-xl p-2">
-                                        <UpvoteDownvote post={myPost} />
-                                        <NavLink to={`/post/${myPost?.id}`}>
-                                            <div className="flex items-center gap-1 bg-[#2a3236] px-3  py-1 hover:bg-[#333d42] rounded-full">
-                                                <GoCommentDiscussion />
-                                                {filteredComments?.length}
-                                            </div>
-                                        </NavLink>
-                                        <div>
-                                            <Share post={myPost} />
-                                        </div>
-                                        <Bookmark post={myPost} />
-                                    </div>
-                                    <Comments post={myPost} />
-                                </div>
+                                            :
+                                            <>
+                                                Update Post
+                                            </>
+                                    }
+                                </button>
                             </div>
-                        </>
+                        </div>
+                        :
+                        <div className="flex justify-center min-h-[100vh]">
+                            <div className="bg-[#272727] w-[60vw] p-4">
+                                <div className="flex items-center justify-between p-4">
+                                    <div className="flex items-center gap-3">
+                                        <img loading="lazy" className="rounded-full aspect-square" src={owner?.avatar} width={35} alt="user avatar" />
+                                        <p>{owner?.username}</p>
+                                        <p>{formatted}</p>
+                                    </div>
+                                    {myPost?.owner == currentUser?.uid && (
+                                        <div className="relative">
+                                            <BsThreeDotsVertical className="cursor-pointer" onClick={toggleMenu} />
+                                            {showMenu && (
+                                                <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
+                                                    <button
+                                                        className="block w-full text-left rounded-xl px-4 py-2 text-sm text-gray-700 hover:bg-gray-200"
+                                                        onClick={() => { setIsUpdating(true); setShowMenu(false) }}
+                                                    >
+                                                        Update Post
+                                                    </button>
+                                                    <button
+                                                        className="block w-full text-left rounded-xl px-4 py-2 text-sm text-gray-700 hover:bg-gray-200"
+                                                        onClick={() => { deletePost(myPost); setShowMenu(false) }}
+                                                    >
+                                                        Delete Post
+                                                    </button>
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="p-4">
+                                    <p className="text-3xl font-bold">{myPost?.title}</p>
+                                    <br />
+                                    {myPost && (
+                                        <div className="text-lg prose dangerous"
+                                            dangerouslySetInnerHTML={{ __html: myPost.content }}
+
+                                        ></div>
+                                    )}
+                                </div>
+                                {myPost?.imageUrl && (
+                                    <img loading="lazy" src={myPost?.imageUrl} className="rounded-xl w-full h-[350px]" alt={myPost?.title} />
+                                )}
+                                <div className="flex items-center gap-7 text-xl p-2">
+                                    <UpvoteDownvote post={myPost} />
+
+                                    <div className="flex items-center gap-1 bg-[#2a3236] px-3  py-1 hover:bg-[#333d42] rounded-full">
+                                        <GoCommentDiscussion />
+                                        {filteredComments?.length}
+                                    </div>
+
+
+                                    <Share post={myPost} />
+
+                                    <Bookmark post={myPost} />
+                                </div>
+                                <Comments post={myPost} />
+                            </div>
+                        </div>
                 ) : (
                     // Loading screen
-                    <div className="flex items-center justify-center min-h-[75vh] mt-4">
-                        <div className="p-4 bg-gray-200 rounded-md">
+                    <div className="flex items-center justify-center min-h-[100vh] mt-4">
+                        <div className="p-4 bg-gray-200 text-black rounded-md">
                             <p className="text-lg font-semibold">Finding This Post....</p>
                         </div>
                     </div>

@@ -1,11 +1,10 @@
-import Post from "../../components/Post";
 import { useInfo } from "../../providers/InfoProvider";
+
+import Post from "../../components/Post";
 
 const Liked = () => {
     const { user, posts } = useInfo();
-    
 
-    
     const bookmarkedPosts = posts?.filter(post => user?.bookmark.includes(post.id))
     return (
         <>

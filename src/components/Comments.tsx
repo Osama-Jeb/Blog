@@ -1,32 +1,32 @@
 import { useInfo } from "../providers/InfoProvider"
 import { useAuth } from "../providers/AuthProvider";
 import { useState } from "react";
-import Comment from "./Comment";
 
+import Comment from "./Comment";
 import { Post as PostProps } from "../constants/types"
 import { v4 as uuidv4 } from "uuid"
+
 import { collection, doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { db } from "../firbase";
 
 import { IoMdSend } from "react-icons/io";
 
+
 type PoP = {
     post: PostProps | undefined
 }
-
 const Comments = (props: PoP) => {
     const [comment, setComment] = useState('');
     const { comments } = useInfo();
     const { currentUser } = useAuth();
+
+    const sortedComments = comments?.filter(comment => comment.postID === props.post?.id).sort((a, b) => a.created_at - b.created_at);
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
             addComment(props.post?.id);
         }
     };
-
-    const sortedComments = comments?.sort((a, b) => a.created_at - b.created_at);
-
 
     const addComment = async (id?: string) => {
 
@@ -50,16 +50,18 @@ const Comments = (props: PoP) => {
         try {
             const commentRef = doc(collection(db, "comments"), newComment.id);
             await setDoc(commentRef, newComment);
-            setComment('');
         } catch (error) {
             console.log(error)
         }
+        setComment('');
     }
 
     return (
         <>
-            <div className="flex items-center gap-3 text-white">
-                <input className="w-full p-2 rounded-full bg-[#272727] " type="text" placeholder='Comment' value={comment}
+            <div className="flex items-center gap-3 text-white mt-3">
+                <input
+                    type="text" placeholder='  Comment' value={comment}
+                    className="w-full p-2 rounded-full bg-[#272727]"
                     onChange={(e) => { setComment(e.target.value) }}
                     onKeyDown={handleKeyDown} />
 
@@ -68,7 +70,7 @@ const Comments = (props: PoP) => {
                 </button>
 
             </div>
-            {sortedComments && sortedComments.filter(comment => comment.postID === props.post?.id).map((element, index) => (
+            {sortedComments && sortedComments.map((element, index) => (
                 <div key={index}>
                     <Comment comment={element} />
                 </div>

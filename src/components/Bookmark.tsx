@@ -1,24 +1,25 @@
-import { arrayRemove, arrayUnion, collection, doc, getDoc, updateDoc } from "firebase/firestore"
-import { useNavigate } from "react-router-dom"
+import { useAuth } from "../providers/AuthProvider"
+import { useInfo } from "../providers/InfoProvider"
+
+import { Post as PostProps } from "../constants/types"
+
 import { db } from "../firbase"
+import { arrayRemove, arrayUnion, collection, doc, getDoc, updateDoc } from "firebase/firestore"
+
 import { FaBookmark } from "react-icons/fa"
 import { CiBookmarkPlus } from "react-icons/ci"
-import { useAuth } from "../providers/AuthProvider"
-import {Post as PostProps} from "../constants/types"
-import { useInfo } from "../providers/InfoProvider"
+
 
 type PoP = {
     post: PostProps | undefined
 }
-
-const Bookmark = (props : PoP) => {
-    const navigate = useNavigate();
-    const {user} = useInfo();
-    const {currentUser} = useAuth();
+const Bookmark = (props: PoP) => {
+    const { user } = useInfo();
+    const { currentUser } = useAuth();
 
     const bookmark = async () => {
         if (!currentUser) {
-            navigate('/sign')
+            alert("You Need an Account")
         }
 
         try {
@@ -55,14 +56,9 @@ const Bookmark = (props : PoP) => {
             <button onClick={bookmark} className="bg-[#2a3236] px-4  py-2 hover:bg-[#333d42] rounded-full text-2xl">
                 {
                     user?.bookmark.includes(props.post?.id || "") ?
-                        <>
-                            <FaBookmark />
-
-                        </>
+                        <FaBookmark />
                         :
-                        <>
-                            <CiBookmarkPlus />
-                        </>
+                        <CiBookmarkPlus />
                 }
             </button>
         </>
