@@ -8,6 +8,7 @@ import Post from "../../../components/Post";
 import { motion, AnimatePresence } from "framer-motion";
 import Comment from "../../../components/Comment";
 import { formatDistanceToNow } from "date-fns";
+import PrivateRoute from "../../../providers/PrivateRouter";
 
 const Profile = () => {
     const { user: userInfo, posts, comments } = useInfo();
@@ -67,49 +68,51 @@ const Profile = () => {
     };
 
     return (
-        <div className="p-[50px] min-h-[100vh]">
-            <div>
-                {userInfo && (
-                    <>
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <div className="flex items-center gap-4">
-                                    <img src={userInfo.avatar} width={50} className="rounded-full aspect-square" alt="" />
-                                    <p>{userInfo.username}</p>
+        <PrivateRoute>
+            <div className="p-[50px] min-h-[100vh]">
+                <div>
+                    {userInfo && (
+                        <>
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <div className="flex items-center gap-4">
+                                        <img src={userInfo.avatar} width={50} className="rounded-full aspect-square" alt="" />
+                                        <p>{userInfo.username}</p>
+                                    </div>
+                                    <p>Member Since: {formatted}</p>
                                 </div>
-                                <p>Member Since: {formatted}</p>
+                            </div>
+                        </>
+                    )}
+
+                    <div className="mt-5">
+                        <div className="flex items-center justify-around">
+                            <div className="flex items-center justify-around w-[50%]">
+                                {cats.map((category, index) => (
+                                    <button className="bg-black text-white text rounded-xl p-4" key={index} onClick={() => { setSelectedCat(category.name); }}>
+                                        {category.name}
+                                    </button>
+                                ))}
                             </div>
                         </div>
-                    </>
-                )}
 
-                <div className="mt-5">
-                    <div className="flex items-center justify-around">
-                        <div className="flex items-center justify-around w-[50%]">
-                            {cats.map((category, index) => (
-                                <button className="bg-black text-white text rounded-xl p-4" key={index} onClick={() => { setSelectedCat(category.name); }}>
-                                    {category.name}
-                                </button>
-                            ))}
+                        <div className="flex items-center justify-center mt-4">
+                            <AnimatePresence mode="wait">
+                                <motion.div
+                                    key={selectedCat}
+                                    initial={{ opacity: 0, x: 50 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    exit={{ opacity: 0, x: -50 }}
+                                    transition={{ duration: 0.5 }}
+                                >
+                                    {renderCategoryContent()}
+                                </motion.div>
+                            </AnimatePresence>
                         </div>
-                    </div>
-
-                    <div className="flex items-center justify-center mt-4">
-                        <AnimatePresence mode="wait">
-                            <motion.div
-                                key={selectedCat}
-                                initial={{ opacity: 0, x: 50 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                exit={{ opacity: 0, x: -50 }}
-                                transition={{ duration: 0.5 }}
-                            >
-                                {renderCategoryContent()}
-                            </motion.div>
-                        </AnimatePresence>
                     </div>
                 </div>
             </div>
-        </div>
+        </PrivateRoute>
     );
 };
 

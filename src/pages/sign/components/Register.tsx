@@ -7,7 +7,11 @@ import { collection, doc, serverTimestamp, setDoc } from "firebase/firestore";
 
 import { v4 as uuidv4 } from "uuid";
 
-const Register = () => {
+type RegProp = {
+    setOpenModal: (openModal: boolean) => void;
+}
+
+const Register = (props : RegProp) => {
     const [loading, setLoading] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -76,7 +80,7 @@ const Register = () => {
 
                 const userRef = doc(collection(db, 'users'), newUser.id);
                 await setDoc(userRef, newUser);
-                console.log("user added");
+                props.setOpenModal(false)
             })
             .catch((error) => {
                 console.log(error);

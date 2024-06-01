@@ -14,7 +14,7 @@ const Home = () => {
 
     return (
         <div className="flex flex-col gap-5 items-center p-4 min-h-[100vh]">
-            <p>Some Sort feature here</p>
+
             {
                 term ?
                     searchPosts && searchPosts.map((post, index) => (

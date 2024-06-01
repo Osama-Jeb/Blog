@@ -1,6 +1,5 @@
-import { useState } from "react";
-
-import { Post as PostProps } from "../constants/types"
+import { useState, useRef, useEffect } from "react";
+import { Post as PostProps } from "../constants/types";
 
 import {
     FacebookIcon, FacebookShareButton,
@@ -20,10 +19,29 @@ const Share = (props: PoP) => {
 
     const postUrl = `https://myblogproject.vercel.app/post/${props.post?.id}`;
     const [showDropdown, setShowDropdown] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
 
     const toggleDropdown = () => {
         setShowDropdown(!showDropdown);
     };
+
+    const handleClickOutside = (event: MouseEvent) => {
+        if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+            setShowDropdown(false);
+        }
+    };
+
+    useEffect(() => {
+        if (showDropdown) {
+            document.addEventListener("mousedown", handleClickOutside);
+        } else {
+            document.removeEventListener("mousedown", handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [showDropdown]);
 
     const shareButtons = [
         {
@@ -45,13 +63,13 @@ const Share = (props: PoP) => {
     ];
 
     return (
-        <div className="relative">
+        <div className="relative" ref={dropdownRef}>
             <button className="bg-[#2a3236] px-4 py-2 hover:bg-[#333d42] rounded-full text-2xl" onClick={toggleDropdown}>
                 <CiShare2 />
             </button>
 
             {showDropdown && (
-                <div className="absolute right-0 mt-2 flex items-center justify-around p-4 gap-3 bg-black text-white rounded-full  z-10">
+                <div className="absolute right-0 mt-2 flex items-center justify-around p-4 gap-3 bg-black text-white rounded-full z-10">
                     <button className="text-2xl transition-all hover:scale-125" onClick={() => {
                         navigator.clipboard.writeText(postUrl)
                         setShowDropdown(false)

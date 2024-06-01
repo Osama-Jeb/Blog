@@ -1,39 +1,61 @@
 import { useAuth } from "../providers/AuthProvider";
 import { useInfo } from "../providers/InfoProvider";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-
 import { FaBars, FaPlus, FaRegUserCircle, FaTimes } from "react-icons/fa";
 import { FaGear, FaHornbill } from "react-icons/fa6";
-
+import { TbZoomReset } from "react-icons/tb";
 import { auth } from "../firbase";
-
 import Login from "../pages/sign/components/Login";
 import Register from "../pages/sign/components/Register";
-
-import { AnimatedModal, AnimatedModalObject, ModalAnimation } from "@dorbus/react-animated-modal"
+import { Modal } from "flowbite-react";
 
 const SideNav = () => {
     const { currentUser } = useAuth();
     const { user: userInfo } = useInfo();
     const navigate = useNavigate();
 
+    const [openModal, setOpenModal] = useState(true);
     const [menuOpen, setMenuOpen] = useState(false);
     const [showSet, setShowSet] = useState(false);
     const [isNewUser, setIsNewUser] = useState(false);
     const [term, setTerm] = useState('');
 
-    const ref = useRef<AnimatedModalObject>(null);
+    const settingsRef = useRef<HTMLDivElement>(null);
 
     const onSearch = () => {
-        if (term) {
-            navigate('/', { state: { term } });
-        }
+        navigate('/', { state: { term } });
+    }
+
+    const onReset = () => {
+        setTerm('');
+        navigate('/');
     }
 
     const handleLogout = () => {
         auth.signOut();
+        navigate('/')
     };
+
+    const handleClickOutside = (event: MouseEvent) => {
+        if (settingsRef.current && !settingsRef.current.contains(event.target as Node)) {
+            setShowSet(false);
+        }
+    };
+
+    useEffect(() => {
+        if (showSet) {
+            document.addEventListener("mousedown", handleClickOutside);
+        } else {
+            document.removeEventListener("mousedown", handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [showSet]);
+
+
 
     return (
         <nav className="bg-black text-white flex items-center justify-between py-3 px-6">
@@ -41,7 +63,7 @@ const SideNav = () => {
                 <FaHornbill />
             </NavLink>
 
-            <div className="hidden md:flex w-[60%]">
+            <div className="hidden md:flex items-center gap-2 w-[60%]">
                 <div className="relative w-full">
                     <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                         <svg className="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
@@ -49,6 +71,7 @@ const SideNav = () => {
                         </svg>
                     </div>
                     <input type="search" id="search" placeholder="Search" required
+                        value={term}
                         className="block w-full p-3 ps-10 text-sm text-gray-900 border border-gray-300 rounded-full bg-gray-50"
                         onChange={(e) => { setTerm(e.target.value); }}
                         onKeyDown={(e) => {
@@ -58,29 +81,33 @@ const SideNav = () => {
                         }}
                     />
                 </div>
+                <button className="text-2xl" onClick={onReset}>
+                    <TbZoomReset />
+                </button>
             </div>
 
-            <AnimatedModal
-                animation={ModalAnimation.Reveal}
-                ref={ref}>
-                <div className=" text-black">
-
-                    {
-                        isNewUser ?
-                            <>
-                                <p className="mb-3 font-bold text-2xl">Sign Up</p>
-                                <Register />
-                                <p>Already Have an Account ? <button className="underline font-semibold mt-4" onClick={() => { setIsNewUser(false) }}>Sign In</button></p>
-                            </>
-                            :
-                            <>
-                                <p className="mb-3 font-bold text-2xl">Log In</p>
-                                <Login />
-                                <p>New User ? <button className="underline font-semibold mt-4" onClick={() => { setIsNewUser(true) }}>Create an Account</button></p>
-                            </>
-                    }
-                </div>
-            </AnimatedModal>
+            <Modal dismissible className="p-[25vw]" show={openModal} onClose={() => setOpenModal(false)}>
+                <Modal.Header>Welcome</Modal.Header>
+                <Modal.Body>
+                    <div className="p-12 text-black">
+                        {
+                            isNewUser ?
+                                <>
+                                    <p className="mb-3 font-bold text-2xl">Sign Up</p>
+                                    <Register setOpenModal={setOpenModal} />
+                                    <p>Already Have an Account ? <button className="underline font-semibold mt-4" onClick={() => { setIsNewUser(false) }}>Sign In</button></p>
+                                </>
+                                :
+                                <>
+                                    <p className="mb-3 font-bold text-2xl">Log In</p>
+                                    <Login setOpenModal={setOpenModal} />
+                                    <p>New User ? <button className="underline font-semibold mt-4" onClick={() => { setIsNewUser(true) }}>Create an Account</button></p>
+                                </>
+                        }
+                    </div>
+                </Modal.Body>
+                
+            </Modal>
 
             {
                 currentUser ?
@@ -92,39 +119,29 @@ const SideNav = () => {
                                 Create
                             </NavLink>}
 
-                        <div className="relative">
+                        <div className="relative" ref={settingsRef}>
                             <button onClick={() => setShowSet(!showSet)}>
-
-                                {
-                                    userInfo && <img src={userInfo.avatar} width={30} className="aspect-square rounded-full" alt="user avatar" />
-                                }
-
+                                {userInfo && <img src={userInfo.avatar} width={30} className="aspect-square rounded-full" alt="user avatar" />}
                             </button>
-                            {
-                                showSet ?
-                                    <div className="absolute right-0 mt-2 w-48 p-4 rounded-xl bg-black text-white z-10">
-                                        <NavLink to={"/profile"} className="hidden md:flex items-center gap-3">
-                                            <FaRegUserCircle />
-                                            Profile
-                                        </NavLink>
-                                        <NavLink to={"/settings"} className="hidden md:flex items-center gap-3 my-2">
-                                            <FaGear />
-                                            Settings
-                                        </NavLink>
-
-                                        <button
-                                            onClick={handleLogout}
-                                            className="bg-red-600 w-full py-1 rounded text-white font-semibold"
-                                        >
-                                            Log Out
-                                        </button>
-
-                                    </div>
-                                    :
-                                    null
-                            }
+                            {showSet && (
+                                <div className="absolute right-0 mt-2 w-48 p-4 rounded-xl bg-black text-white z-10">
+                                    <NavLink onClick={() => { setShowSet(false) }} to={"/profile"} className="hidden md:flex items-center gap-3">
+                                        <FaRegUserCircle />
+                                        Profile
+                                    </NavLink>
+                                    <NavLink onClick={() => { setShowSet(false) }} to={"/settings"} className="hidden md:flex items-center gap-3 my-2">
+                                        <FaGear />
+                                        Settings
+                                    </NavLink>
+                                    <button
+                                        onClick={handleLogout}
+                                        className="bg-red-600 w-full py-1 rounded text-white font-semibold"
+                                    >
+                                        Log Out
+                                    </button>
+                                </div>
+                            )}
                         </div>
-
 
                         <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden">
                             {menuOpen ? <FaTimes /> : <FaBars />}
@@ -132,12 +149,11 @@ const SideNav = () => {
                     </div>
                     :
                     <button
-                        onClick={() => { ref.current?.OpenModal() }}
+                        onClick={() => { setOpenModal(true) }}
                         className="bg-orange-600 text-white font-semibold px-4 py-2 rounded-full">
                         Log in
                     </button>
             }
-
 
             {menuOpen && (
                 <div className="absolute top-16 left-0 w-full bg-black text-white flex flex-col items-center space-y-4 py-4 md:hidden">
@@ -167,8 +183,7 @@ const SideNav = () => {
                 </div>
             )}
         </nav>
-
-    )
+    );
 }
 
 export default SideNav;
