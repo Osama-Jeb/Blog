@@ -6,11 +6,12 @@ import { v4 as uuidv4 } from "uuid"
 
 import { collection, doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { db, storage } from "../firbase";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { StorageReference, getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 import { Post } from "../constants/types";
 import Tiptap from "./Tiptap";
 import PrivateRoute from "../providers/PrivateRouter";
+import FileDisplay from "./FileDisplay";
 
 
 
@@ -26,10 +27,20 @@ const AddPost = () => {
 
     const navigate = useNavigate()
 
-    const uploadImage = async (): Promise<string> => {
+    const uploadFile = async (): Promise<string> => {
         if (image) {
             setLoading(true);
-            const imageRef = ref(storage, `posts/${uuidv4()}`);
+            let imageRef : StorageReference;
+            
+            // add an extension depending on the file format
+            if (image.type.startsWith('image')) {
+                imageRef = ref(storage, `posts/${uuidv4()}.jpeg`);
+            } else if (image.type.startsWith('video')) {
+                imageRef = ref(storage, `posts/${uuidv4()}.mp4`);
+            } else {
+                alert('file type not supported')
+                throw Error('File Type Not Supported')
+            }
 
             try {
                 const snapshot = await uploadBytes(imageRef, image);
@@ -47,7 +58,7 @@ const AddPost = () => {
     }
 
     const addPost = async () => {
-        let imageUrl = '';
+        let fileUrl = '';
 
         if (!currentUser) {
             alert('Please Sign In or Create an Account')
@@ -60,7 +71,7 @@ const AddPost = () => {
 
         if (image) {
             try {
-                imageUrl = await uploadImage();
+                fileUrl = await uploadFile();
             } catch (error) {
                 console.error("Image upload failed", error);
                 return;
@@ -71,7 +82,7 @@ const AddPost = () => {
             id: uuidv4(),
             title,
             content,
-            imageUrl,
+            imageUrl : fileUrl,
             owner: currentUser?.uid,
             created_at: serverTimestamp(),
             updated_at: serverTimestamp(),
@@ -107,7 +118,7 @@ const AddPost = () => {
                     onChange={(e) => { setImage(e.target.files ? e.target.files[0] : null) }} />
 
                 {
-                    image && <img src={URL.createObjectURL(image)} className="w-[50%] h-[40vh] aspect-square rounded-xl" alt="" />
+                    image && <FileDisplay image={image} />
                 }
 
                 <button className="bg-blue-500 font-semibold text-white px-4 py-2 rounded w-[50%] mt-2"

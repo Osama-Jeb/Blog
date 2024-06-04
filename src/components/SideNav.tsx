@@ -9,13 +9,14 @@ import { auth } from "../firbase";
 import Login from "../pages/sign/components/Login";
 import Register from "../pages/sign/components/Register";
 import { Modal } from "flowbite-react";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 const SideNav = () => {
     const { currentUser } = useAuth();
     const { user: userInfo } = useInfo();
     const navigate = useNavigate();
 
-    const [openModal, setOpenModal] = useState(true);
+    const [openModal, setOpenModal] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
     const [showSet, setShowSet] = useState(false);
     const [isNewUser, setIsNewUser] = useState(false);
@@ -56,9 +57,15 @@ const SideNav = () => {
     }, [showSet]);
 
 
+    const signInGuest = async() => {
+        const email = "guest@guest.com";
+        const password = "password";
+        await signInWithEmailAndPassword(auth, email, password)
+        setOpenModal(false)
+    }
 
     return (
-        <nav className="bg-black text-white flex items-center justify-between py-3 px-6">
+        <nav className="bg-[#202020] text-[#eef1f3] flex items-center justify-between py-3 px-6">
             <NavLink className="text-4xl hover:rotate-180" to={"/"}>
                 <FaHornbill />
             </NavLink>
@@ -95,18 +102,22 @@ const SideNav = () => {
                                 <>
                                     <p className="mb-3 font-bold text-2xl">Sign Up</p>
                                     <Register setOpenModal={setOpenModal} />
-                                    <p>Already Have an Account ? <button className="underline font-semibold mt-4" onClick={() => { setIsNewUser(false) }}>Sign In</button></p>
+                                    <p className="text-center">Already Have an Account ? <button className="underline font-semibold mt-4" onClick={() => { setIsNewUser(false) }}>Sign In</button></p>
                                 </>
                                 :
                                 <>
                                     <p className="mb-3 font-bold text-2xl">Log In</p>
                                     <Login setOpenModal={setOpenModal} />
-                                    <p>New User ? <button className="underline font-semibold mt-4" onClick={() => { setIsNewUser(true) }}>Create an Account</button></p>
+                                    <p className="text-center">New User ? <button className="underline font-semibold mt-4" onClick={() => { setIsNewUser(true) }}>Create an Account</button></p>
                                 </>
                         }
+
+                        <button
+                            onClick={signInGuest}
+                            className="w-full bg-black text-white px-4 py-2 rounded mt-4">Sign In As Guest</button>
                     </div>
                 </Modal.Body>
-                
+
             </Modal>
 
             {

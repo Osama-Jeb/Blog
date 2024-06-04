@@ -20,6 +20,7 @@ import { GoCommentDiscussion } from "react-icons/go";
 
 import { formatDistanceToNow } from "date-fns";
 import { v4 as uuidv4 } from "uuid"
+import ReactPlayer from "react-player";
 
 
 const PostPage = () => {
@@ -115,6 +116,7 @@ const PostPage = () => {
         }
     }
 
+
     return (
         <>
             {
@@ -122,7 +124,7 @@ const PostPage = () => {
                     isUpdating ?
                         <div className="flex justify-center min-h-[100vh] mt-3 p-4">
                             <div className="flex items-center flex-col gap-3">
-                                <button onClick={() => {setIsUpdating(false)}} className="px-4 py-2 bg-red-600 rounded">Cancel Update</button>
+                                <button onClick={() => { setIsUpdating(false) }} className="px-4 py-2 bg-red-600 rounded">Cancel Update</button>
                                 <input className="bg-[#272727] w-full text-[#eef1f3] rounded-full py-3" placeholder='Title' type="text" value={title} onChange={(e) => { setTitle(e.target.value) }} />
 
                                 <Tiptap content={content ? content : ""} setContent={setContent} />
@@ -197,9 +199,16 @@ const PostPage = () => {
                                         ></div>
                                     )}
                                 </div>
-                                {myPost?.imageUrl && (
-                                    <img loading="lazy" src={myPost?.imageUrl} className="rounded-xl w-full h-[350px]" alt={myPost?.title} />
-                                )}
+
+                                <div className="flex items-center justify-center mt-4">
+                                    {
+                                        myPost?.imageUrl?.includes('jpeg') ?
+                                            <img loading="lazy" src={myPost?.imageUrl} width={200} className="rounded-xl w-full" alt={myPost?.title} />
+                                            :
+                                            <ReactPlayer pip={true} controls={true} url={myPost?.imageUrl} />
+                                    }
+                                </div>
+
                                 <div className="flex items-center gap-7 text-xl p-2">
                                     <UpvoteDownvote post={myPost} />
 

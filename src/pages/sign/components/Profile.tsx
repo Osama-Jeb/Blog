@@ -7,7 +7,6 @@ import { FaSignsPost } from "react-icons/fa6";
 import Post from "../../../components/Post";
 import { motion, AnimatePresence } from "framer-motion";
 import Comment from "../../../components/Comment";
-import { formatDistanceToNow } from "date-fns";
 import PrivateRoute from "../../../providers/PrivateRouter";
 
 const Profile = () => {
@@ -18,8 +17,6 @@ const Profile = () => {
     const upvotedPosts = posts?.filter(post => post.upvotes.includes(userInfo?.id));
     const commented = comments?.filter(comm => comm.owner == userInfo?.id);
 
-    const datestring = userInfo?.created_at.toDate().toString();
-    const formatted = userInfo && formatDistanceToNow(new Date(datestring), { addSuffix: true });
 
     const cats = [
         { name: "Posts", icon: <><FaSignsPost /></> },
@@ -71,19 +68,6 @@ const Profile = () => {
         <PrivateRoute>
             <div className="p-[50px] min-h-[100vh]">
                 <div>
-                    {userInfo && (
-                        <>
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <div className="flex items-center gap-4">
-                                        <img src={userInfo.avatar} width={50} className="rounded-full aspect-square" alt="" />
-                                        <p>{userInfo.username}</p>
-                                    </div>
-                                    <p>Member Since: {formatted}</p>
-                                </div>
-                            </div>
-                        </>
-                    )}
 
                     <div className="mt-5">
                         <div className="flex items-center justify-around">
