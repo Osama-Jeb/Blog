@@ -6,18 +6,30 @@ import AddPost from "./components/AddPost";
 import PostPage from "./pages/post/PostPage";
 import Settings from "./pages/settings/Settings";
 import Profile from "./pages/sign/components/Profile";
+import { useAuth } from "./providers/AuthProvider";
 
 const App = () => {
+    const { isLoading } = useAuth();
     return (
         <>
-            <SideNav />
-            <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/settings" element={<Settings />} />
-                <Route path="/addPost" element={<AddPost />} />
-                <Route path="/post/:id" element={<PostPage />} />
-            </Routes>
+            {
+                isLoading ?
+                    <>
+                        <SideNav />
+                        <Routes>
+                            <Route path="/" element={<Home />} />
+                            <Route path="/profile" element={<Profile />} />
+                            <Route path="/settings" element={<Settings />} />
+                            <Route path="/addPost" element={<AddPost />} />
+                            <Route path="/post/:id" element={<PostPage />} />
+                        </Routes>
+                    </>
+
+                    :
+                    <div className="flex items-center justify-center h-[100vh]">
+                        <p>LOADDIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIING</p>
+                    </div>
+            }
         </>
     )
 }

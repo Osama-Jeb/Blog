@@ -8,7 +8,6 @@ import Share from "./Share";
 
 import { GoCommentDiscussion } from "react-icons/go";
 
-// import { formatDistanceToNow } from "date-fns";
 import ReactPlayer from "react-player";
 
 
@@ -21,9 +20,6 @@ const Post = (props: PoP) => {
 
     const regex = /(<([^>]+)>)/gi;
     const postComments = comments?.filter(comment => comment.postID === props.post?.id);
-
-    // const datestring = props.post && props.post.created_at?.toDate().toString();
-    // const formatted = props.post && formatDistanceToNow(new Date(datestring), { addSuffix: true });
 
     return (
         <div className="w-[60vw] p-3 hover:bg-[#181c1f] rounded-xl">

@@ -30,33 +30,52 @@ const Profile = () => {
             case 'Posts':
                 return (
                     <div>
-                        {myPosts && myPosts.map((post, index) => (
-                            <div key={index} className="mb-4">
-                                <Post post={post} />
-                            </div>
-                        ))}
+                        {myPosts && myPosts.length > 0 ?
+                            myPosts.sort((a, b) => b.created_at - a.created_at).map((post, index) => (
+                                <div key={index} className="mb-4">
+                                    <Post post={post} />
+                                </div>
+                            ))
+                            :
+                            <p className="text-4xl font-semibold mt-4">You Have No Posts Yet</p>
+
+                        }
                     </div>
                 );
+
             case 'Upvotes':
                 return (
                     <div>
-                        {upvotedPosts && upvotedPosts.map((post, index) => (
-                            <div key={index} className="mb-4">
-                                <Post post={post} />
-                            </div>
-                        ))}
+                        {upvotedPosts && upvotedPosts.length > 0 ?
+
+                            upvotedPosts.sort((a, b) => b.created_at - a.created_at).map((post, index) => (
+                                <div key={index} className="mb-4">
+                                    <Post post={post} />
+                                </div>
+                            ))
+                            :
+                            <p className="text-4xl font-semibold mt-4">You Have No Upvotes Yet</p>
+                        }
                     </div>
                 );
+
             case 'Bookmarks':
                 return <div><Liked /></div>;
+
             case 'Comments':
                 return (
                     <div>
-                        {commented?.map((comm) => (
-                            <div className="w-[70vw]">
-                                <Comment comment={comm} />
-                            </div>
-                        ))}
+                        {
+                            comments && comments.length > 0 ?
+                                commented?.map((comm) => (
+                                    <div className="w-[70vw]">
+                                        <p>From Post: <span className="font-semibold text-xl">{posts?.filter(post => post.id === comm.postID)[0].title}</span></p>
+                                        <Comment comment={comm} />
+                                    </div>
+                                ))
+                                :
+                                <p className="text-4xl font-semibold mt-4">You Have No Comments Yet</p>
+                        }
                     </div>
                 );
             default:

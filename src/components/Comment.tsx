@@ -10,7 +10,6 @@ import { db } from "../firbase";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { MdOutlineCancel } from "react-icons/md";
 import { FaRegCheckCircle } from "react-icons/fa";
-import { formatDistanceToNow } from "date-fns";
 
 
 type CoP = {
@@ -26,9 +25,6 @@ const Comment = (props: CoP) => {
     const [isUpdating, setIsUpdating] = useState(false);
     const [updatedComment, setUpdatedComment] = useState(props.comment.comment);
     const [showMenu, setShowMenu] = useState(false);
-
-    const datestring = props.comment.created_at.toDate().toString();
-    const formatted = formatDistanceToNow(new Date(datestring), { addSuffix: true });
 
     const toggleMenu = () => {
         setShowMenu(!showMenu)
@@ -71,7 +67,6 @@ const Comment = (props: CoP) => {
                 <div className="flex items-center gap-3">
                     <img className="rounded-full w-6 h-6" src={commenter?.avatar} alt="commenter avatar" />
                     <p className="text-sm">{commenter?.username}</p>
-                    <p>{formatted}</p>
                 </div>
                 <div className="w-full flex items-center ml-8 mt-1">
                     {

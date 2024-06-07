@@ -16,7 +16,7 @@ const FileDisplay: React.FC<Props> = ({ image }) => {
             {image.type.startsWith('image') ? (
                 <img
                     src={fileURL}
-                    className="w-[50%] h-[40vh] aspect-square rounded-xl"
+                    className="w-full rounded-xl"
                     alt="Uploaded content"
                 />
             ) : (

@@ -9,11 +9,15 @@ const Liked = () => {
     return (
         <>
             {
-                bookmarkedPosts && bookmarkedPosts?.map((post, index) => (
-                    <div key={index} className="mt-5">
-                        <Post post={post} />
-                    </div>
-                ))
+                bookmarkedPosts && bookmarkedPosts.length > 0 ?
+                    bookmarkedPosts?.map((post, index) => (
+                        <div key={index} className="mt-5">
+                            <Post post={post} />
+                        </div>
+                    ))
+                    :
+                    <p className="text-4xl font-semibold mt-4">You Have No Bookmarks Yet</p>
+
             }
         </>
     )

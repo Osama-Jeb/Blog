@@ -3,7 +3,7 @@ import { useInfo } from "../providers/InfoProvider";
 import { useRef, useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { FaBars, FaPlus, FaRegUserCircle, FaTimes } from "react-icons/fa";
-import { FaGear, FaHornbill } from "react-icons/fa6";
+import { FaGear, FaHornbill, FaMagnifyingGlass } from "react-icons/fa6";
 import { TbZoomReset } from "react-icons/tb";
 import { auth } from "../firbase";
 import Login from "../pages/sign/components/Login";
@@ -57,7 +57,7 @@ const SideNav = () => {
     }, [showSet]);
 
 
-    const signInGuest = async() => {
+    const signInGuest = async () => {
         const email = "guest@guest.com";
         const password = "password";
         await signInWithEmailAndPassword(auth, email, password)
@@ -88,7 +88,11 @@ const SideNav = () => {
                         }}
                     />
                 </div>
-                <button className="text-2xl" onClick={onReset}>
+
+                <button className="text-xl" onClick={onSearch}>
+                    <FaMagnifyingGlass />
+                </button>
+                <button className="text-2xl flex items-center" onClick={onReset}>
                     <TbZoomReset />
                 </button>
             </div>
@@ -125,7 +129,7 @@ const SideNav = () => {
                     <div className="flex items-center gap-4 text-xl">
                         {currentUser &&
 
-                            <NavLink to={"/addPost"} className="hidden md:flex items-center gap-3 rounded-full hover:bg-gray-900 px-3 py-2">
+                            <NavLink to={"/addPost"} className="hidden md:flex items-center gap-3 rounded-full hover:bg-gray-700 px-3 py-2">
                                 <FaPlus />
                                 Create
                             </NavLink>}
