@@ -18,14 +18,14 @@ const Home = () => {
             {
                 term ?
                     searchPosts && searchPosts.map((post, index) => (
-                        <div key={index}>
+                        <div key={index} className="sm:w-[75vw]">
                             <Post post={post} />
                         </div>
                     ))
                     :
 
                     sortedPosts && sortedPosts.map((post, index) => (
-                        <div key={index}>
+                        <div key={index} className="sm:w-[75vw]">
                             <Post post={post} />
                         </div>
                     ))

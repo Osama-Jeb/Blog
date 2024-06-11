@@ -112,7 +112,7 @@ const AddPost = () => {
             >
                 <p className="text-xl font-semibold">Create Your Post Here: </p>
                 <input
-                    className="bg-[#272727] text-[#eef1f3] rounded-full py-3 w-[52%]"
+                    className="bg-[#272727] text-[#eef1f3] rounded-xl py-3 w-[52%]"
                     placeholder='Title' type="text" value={title}
                     onChange={(e) => { setTitle(e.target.value) }} />
 

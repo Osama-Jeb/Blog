@@ -70,7 +70,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
     }
 
     return (
-        <div className='flex items-center flex-wrap gap-2  text-[#eef1f3]'>
+        <div className='flex items-center flex-wrap gap-2 mt-4 text-[#eef1f3]'>
             {buttonConfigs.map(({ action, isActive, icon, disabled }, index) => (
                 <button
                     key={index}
@@ -115,7 +115,7 @@ const Tiptap = (props: TipProp) => {
         <>
             <MenuBar editor={editor} />
             <EditorContent
-                className='prose-lg dangerous'
+                className='prose-lg dangerous mt-4 w-full'
                 editor={editor}
             />
         </>

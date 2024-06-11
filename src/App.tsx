@@ -17,7 +17,6 @@ const App = () => {
                         <SideNav />
                         <Routes>
                             <Route path="/" element={<Home />} />
-                            <Route path="/profile" element={<Profile />} />
                             <Route path="/profile/:id" element={<Profile />} />
                             <Route path="/addPost" element={<AddPost />} />
                             <Route path="/post/:id" element={<PostPage />} />

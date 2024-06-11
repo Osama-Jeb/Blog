@@ -14,7 +14,7 @@ import { FaPen } from "react-icons/fa6";
 import { StorageReference, getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 import { v4 as uuidv4 } from "uuid"
-import { useParams } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
 
 const Profile = () => {
 
@@ -59,7 +59,7 @@ const Profile = () => {
                         {upvotedPosts && upvotedPosts.length > 0 ?
 
                             upvotedPosts.sort((a, b) => b.created_at - a.created_at).map((post, index) => (
-                                <div key={index} className="mb-4">
+                                <div key={index} className="mb-4 w-[90vw] lg:w-full">
                                     <Post post={post} />
                                 </div>
                             ))
@@ -74,19 +74,24 @@ const Profile = () => {
 
             case 'Comments':
                 return (
-                    <div>
+                    <>
                         {
                             comments && comments.length > 0 ?
                                 commented?.map((comm) => (
-                                    <div className="w-[70vw]">
-                                        <p>From Post: <span className="font-semibold text-xl">{posts?.filter(post => post.id === comm.postID)[0]?.title}</span></p>
+                                    <div className="sm:w-[70vw] mt-5 hover:bg-[#181c1f] p-3 rounded">
+                                        <NavLink to={`/post/${posts?.filter(post => post.id === comm.postID)[0]?.id}`} 
+                                        className="bg-black text-white rounded px-2 py-1"
+                                        >
+                                            Original Post: <span className="font-semibold text-xl">{posts?.filter(post => post.id === comm.postID)[0]?.title}</span>
+                                        </NavLink>
                                         <Comment comment={comm} />
+                                        <hr />
                                     </div>
                                 ))
                                 :
                                 <p className="text-4xl font-semibold mt-4">You Have No Comments Yet</p>
                         }
-                    </div>
+                    </>
                 );
             default:
                 return null;
@@ -159,7 +164,7 @@ const Profile = () => {
             }
         }
 
-        // then update the imageUrl for the user's avatar
+
         const newInfo = {
             username: updateUsername,
             avatar: newImg || profileOwner?.avatar,
@@ -180,9 +185,9 @@ const Profile = () => {
 
     return (
         <PrivateRoute>
-            <div className="p-[50px] min-h-[100vh]">
+            <div className="sm:p-[50px] min-h-[100vh]">
                 <div>
-                    <div className="w-[70%] mx-auto flex justify-between items-center gap-3 p-2">
+                    <div className="sm:w-[70%] mx-auto flex justify-between items-center gap-3 p-2">
                         {
                             isUpdating ?
                                 <form className="flex items-center gap-3">
@@ -225,21 +230,21 @@ const Profile = () => {
 
                         {
                             userInfo?.id === profileOwner?.id ?
-                                    <button
-                                        onClick={() => { setIsUpdating(!isUpdating) }}
-                                        className="bg-black text-white p-2 rounded"
-                                    >
-                                        <FaPen />
-                                    </button>
+                                <button
+                                    onClick={() => { setIsUpdating(!isUpdating) }}
+                                    className="bg-black text-white p-2 rounded"
+                                >
+                                    <FaPen />
+                                </button>
                                 :
                                 null
                         }
                     </div>
                     <div className="mt-5">
                         <div className="flex items-center justify-around">
-                            <div className="flex items-center justify-around w-[50%]">
+                            <div className="flex items-center justify-around gap-4 sm:w-[50%]">
                                 {cats.map((category, index) => (
-                                    <button className="bg-black text-white text rounded-xl p-4" key={index} onClick={() => { setSelectedCat(category.name); }}>
+                                    <button className="bg-black text-white text rounded-xl sm:p-4 p-2" key={index} onClick={() => { setSelectedCat(category.name); }}>
                                         {category.name}
                                     </button>
                                 ))}

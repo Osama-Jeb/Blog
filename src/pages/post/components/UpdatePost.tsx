@@ -83,11 +83,11 @@ const UpdatePost = (props : UpdatePostProps) => {
     }
     return (
         <div className="flex justify-center min-h-[100vh] mt-3 p-4">
-            <form className="flex items-center w-[60vw] flex-col gap-3"
+            <form className="flex items-center sm:w-[75vw] flex-col gap-3"
             onSubmit={(e) => {updatePost(e, props.post.id)}}
             >
                 <button onClick={() => { props.setIsUpdating(false) }} className="px-4 py-2 bg-red-600 rounded">Cancel Update</button>
-                <input className="bg-[#272727] w-full text-[#eef1f3] rounded-full py-3" placeholder='Title' type="text" value={title} onChange={(e) => { setTitle(e.target.value) }} />
+                <input className="bg-[#272727] w-full text-[#eef1f3] rounded-xl py-3" placeholder='Title' type="text" value={title} onChange={(e) => { setTitle(e.target.value) }} />
 
                 <Tiptap content={content ? content : ""} setContent={setContent} />
 
@@ -112,7 +112,6 @@ const UpdatePost = (props : UpdatePostProps) => {
 
                 <button
                     className="bg-green-500 w-full px-4 py-2 rounded"
-                    // onClick={() => { updatePost(props.post.id) }}
                 >
 
                     {

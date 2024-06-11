@@ -27,7 +27,7 @@ nav {
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-    background: #1d4ed8;
+    background: #1d1d1d;
 }
 
 #animated-modal-container #animated-modal-background {
@@ -42,7 +42,7 @@ nav {
 /**** TIPTAP */
 
 .tiptap {
-    width: 50vw;
+    /* width: 50vw; */
     min-height: 20vh;
     background-color: #272727;
     color: #eef1f3;

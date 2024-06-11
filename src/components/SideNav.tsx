@@ -97,10 +97,10 @@ const SideNav = () => {
                 </button>
             </div>
 
-            <Modal dismissible className="p-[25vw]" show={openModal} onClose={() => setOpenModal(false)}>
+            <Modal dismissible className="sm:p-[25vw]" show={openModal} onClose={() => setOpenModal(false)}>
                 <Modal.Header>Welcome</Modal.Header>
                 <Modal.Body>
-                    <div className="p-12 text-black">
+                    <div className="p-5 sm:p-12 text-black">
                         {
                             isNewUser ?
                                 <>
@@ -140,7 +140,7 @@ const SideNav = () => {
                             </button>
                             {showSet && (
                                 <div className="absolute right-0 mt-2 w-48 p-4 rounded-xl bg-black text-white z-10">
-                                    <NavLink onClick={() => { setShowSet(false) }} to={"/profile"} className="hidden md:flex items-center gap-3">
+                                    <NavLink onClick={() => { setShowSet(false) }} to={`/profile/${userInfo?.id}`} className="hidden md:flex items-center gap-3">
                                         <FaRegUserCircle />
                                         Profile
                                     </NavLink>
@@ -168,7 +168,7 @@ const SideNav = () => {
 
             {menuOpen && (
                 <div className="absolute top-16 left-0 w-full bg-black text-white flex flex-col items-center space-y-4 py-4 md:hidden">
-                    <div className="w-[90%]">
+                    <div className="w-[90%] flex items-center gap-2">
                         <input
                             type="text"
                             value={term}
@@ -182,15 +182,36 @@ const SideNav = () => {
                                 }
                             }}
                         />
+                        <button className="text-xl" onClick={() => {
+                            onSearch();
+                            setMenuOpen(false);
+                        }}>
+                            <FaMagnifyingGlass />
+                        </button>
+                        <button className="text-2xl flex items-center" onClick={() => {
+                            onReset();
+                            setMenuOpen(false);
+                        }}>
+                            <TbZoomReset />
+                        </button>
                     </div>
-                    <div className="flex items-center gap-7">
-                        {currentUser && <NavLink to={"/addPost"} className="text-3xl">
-                            <FaPlus />
-                        </NavLink>}
-                        <NavLink to={"/profile"} className="text-3xl">
-                            <FaRegUserCircle />
-                        </NavLink>
-                    </div>
+                    
+                        {currentUser &&
+                            <NavLink to={"/addPost"} className="flex items-center gap-4 rounded-full hover:bg-gray-700 px-4 py-2">
+                                <FaPlus />
+                                Create
+                            </NavLink>
+
+                        }
+                    <button
+                        onClick={() => {
+                            handleLogout()
+                            setMenuOpen(false)
+                        }}
+                        className="bg-red-600 py-1 px-4  rounded text-white font-semibold"
+                    >
+                        Log Out
+                    </button>
                 </div>
             )}
         </nav>

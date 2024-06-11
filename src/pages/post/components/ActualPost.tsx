@@ -81,7 +81,7 @@ const ActualPost = (props: ActualPostProps) => {
 
     return (
         <div className="flex justify-center min-h-[100vh] pb-5">
-            <div className="bg-[#272727] w-[60vw] p-4">
+            <div className="bg-[#272727] sm:w-[75vw] p-4">
                 <div className="flex items-center justify-between p-4">
                     <NavLink to={`/profile/${owner?.id}`} className="flex items-center gap-3">
                         <img loading="lazy" className="rounded-full aspect-square" src={owner?.avatar} width={35} alt="user avatar" />
