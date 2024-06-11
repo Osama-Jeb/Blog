@@ -74,6 +74,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
             {buttonConfigs.map(({ action, isActive, icon, disabled }, index) => (
                 <button
                     key={index}
+                    type='button'
                     onClick={() => action(editor)}
                     disabled={disabled ? disabled(editor) : false}
                     className={`${isActive && isActive(editor) ? 'is-active' : ''}  bg-transparent rounded-lg border-[1px] p-2 hover:bg-gray-800`}
@@ -84,6 +85,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
 
             {headingConfigs.map(({ action, isActive, icon }, index) => (
                 <button
+                    type='button'
                     key={index}
                     onClick={() => action(editor)}
                     className={`${isActive(editor) ? 'is-active' : ''}  bg-transparent rounded-lg border-[1px] p-2 hover:bg-gray-800`}
@@ -113,7 +115,7 @@ const Tiptap = (props: TipProp) => {
         <>
             <MenuBar editor={editor} />
             <EditorContent
-                className='prose-lg'
+                className='prose-lg dangerous'
                 editor={editor}
             />
         </>

@@ -1,37 +1,32 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../providers/AuthProvider";
-
-import { v4 as uuidv4 } from "uuid"
-
-import { collection, doc, serverTimestamp, setDoc } from "firebase/firestore";
-import { db, storage } from "../firbase";
 import { StorageReference, getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { useState } from "react";
+import { db, storage } from "../../../firbase";
+import {v4 as uuidv4} from "uuid"
+import { collection, doc, serverTimestamp, updateDoc } from "firebase/firestore";
+import { Post } from "../../../constants/types";
+import FileDisplay from "../../../components/FileDisplay";
+import ReactPlayer from "react-player";
+import Tiptap from "../../../components/Tiptap";
 
-import { Post } from "../constants/types";
-import Tiptap from "./Tiptap";
-import PrivateRoute from "../providers/PrivateRouter";
-import FileDisplay from "./FileDisplay";
 
+type UpdatePostProps = {
+    post: Post,
+    setIsUpdating: (arg0: boolean) => void;
+}
 
+const UpdatePost = (props : UpdatePostProps) => {
 
-const AddPost = () => {
-    const { currentUser } = useAuth();
-
-    // Inputs
-    const [title, setTitle] = useState('');
-    const [content, setContent] = useState('<p>Write Something Here</p>');
-    const [image, setImage] = useState<File | null>(null);
-    // loading for uploading an image
+    // updating post 
+    const [title, setTitle] = useState(props.post.title);
+    const [content, setContent] = useState(props.post.content);
+    const [image, setImage] = useState<any>(null);
     const [loading, setLoading] = useState(false);
-
-    const navigate = useNavigate()
 
     const uploadFile = async (): Promise<string> => {
         if (image) {
             setLoading(true);
-            let imageRef : StorageReference;
-            
+            let imageRef: StorageReference;
+
             // add an extension depending on the file format
             if (image.type.startsWith('image')) {
                 imageRef = ref(storage, `posts/${uuidv4()}.jpeg`);
@@ -57,77 +52,68 @@ const AddPost = () => {
         }
     }
 
-    const addPost = async (e: any) => {
+    const updatePost = async (e:any, id: string) => {
         e.preventDefault()
-        let fileUrl = '';
-
-        if (!currentUser) {
-            alert('Please Sign In or Create an Account')
-            return;
-        }
-
-        if (!title) {
-            alert("add title and content please")
-            return
-        }
+        let imageUrl = "";
 
         if (image) {
             try {
-                fileUrl = await uploadFile();
+                imageUrl = await uploadFile();
             } catch (error) {
                 console.error("Image upload failed", error);
                 return;
             }
         }
 
-        const newPost: Post = {
-            id: uuidv4(),
-            title,
-            content,
-            imageUrl : fileUrl,
-            owner: currentUser?.uid,
-            created_at: serverTimestamp(),
+        const newPost = {
+            title: title,
+            content: content,
+            imageUrl: imageUrl || props.post.imageUrl,
             updated_at: serverTimestamp(),
-            upvotes: [],
-            downvotes: []
-        };
+        }
 
         try {
-            const postRef = doc(collection(db, 'posts'), newPost.id);
-            await setDoc(postRef, newPost);
-
-            setTitle('');
-            setContent('');
-            navigate('/')
+            const postRef = doc(collection(db, "posts"), id);
+            updateDoc(postRef, newPost);
+            props.setIsUpdating(false);
+            setImage(null)
         } catch (error) {
-            console.error(error);
+            console.log(error)
         }
     }
-
-
     return (
-        <PrivateRoute>
-            <form className="flex flex-col items-center gap-7 justify-center p-5 min-h-[100vh]"
-            onSubmit={addPost}
+        <div className="flex justify-center min-h-[100vh] mt-3 p-4">
+            <form className="flex items-center w-[60vw] flex-col gap-3"
+            onSubmit={(e) => {updatePost(e, props.post.id)}}
             >
-                <p className="text-xl font-semibold">Create Your Post Here: </p>
-                <input
-                    className="bg-[#272727] text-[#eef1f3] rounded-full py-3 w-[52%]"
-                    placeholder='Title' type="text" value={title}
-                    onChange={(e) => { setTitle(e.target.value) }} />
+                <button onClick={() => { props.setIsUpdating(false) }} className="px-4 py-2 bg-red-600 rounded">Cancel Update</button>
+                <input className="bg-[#272727] w-full text-[#eef1f3] rounded-full py-3" placeholder='Title' type="text" value={title} onChange={(e) => { setTitle(e.target.value) }} />
 
-                <Tiptap content={content} setContent={setContent} />
+                <Tiptap content={content ? content : ""} setContent={setContent} />
 
-                <input className="w-[51%]" type="file"
-                    onChange={(e) => { setImage(e.target.files ? e.target.files[0] : null) }} />
+                <input className="w-full" type="file" onChange={(e) => { setImage(e.target.files ? e.target.files[0] : null) }} />
 
-                {
-                    image && <FileDisplay image={image} />
-                }
+                <div className="flex items-center justify-center mt-4">
+                    {
+                        image ?
+                            <FileDisplay image={image} />
+                            :
 
-                <button className="bg-blue-500 font-semibold text-white px-4 py-2 rounded w-[50%] mt-2"
-                    disabled={loading}
-                    >
+                            <>
+                                {
+                                    props.post.imageUrl?.includes('jpeg') ?
+                                        <img loading="lazy" src={props.post.imageUrl} width={200} className="rounded-xl w-full" alt={props.post.title} />
+                                        :
+                                        <ReactPlayer controls={true} url={props.post.imageUrl} />
+                                }
+                            </>
+                    }
+                </div>
+
+                <button
+                    className="bg-green-500 w-full px-4 py-2 rounded"
+                    // onClick={() => { updatePost(props.post.id) }}
+                >
 
                     {
                         loading ?
@@ -138,15 +124,16 @@ const AddPost = () => {
                                 </svg>
                                 <p>....Loading</p>
                             </div>
+
                             :
                             <>
-                                Post
+                                Update Post
                             </>
                     }
                 </button>
             </form>
-        </PrivateRoute>
+        </div>
     )
 }
 
-export default AddPost;
+export default UpdatePost;

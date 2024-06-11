@@ -1,6 +1,6 @@
 import { useAuth } from "../providers/AuthProvider";
 import { useInfo } from "../providers/InfoProvider";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { Comment as CommentType } from "../constants/types";
 
@@ -23,7 +23,7 @@ const Comment = (props: CoP) => {
     const commenter = users && Object.values(users).find(user => user.id === props.comment.owner);
 
     const [isUpdating, setIsUpdating] = useState(false);
-    const [updatedComment, setUpdatedComment] = useState(props.comment.comment);
+    const [updatedComment, setUpdatedComment] = useState("");
     const [showMenu, setShowMenu] = useState(false);
 
     const toggleMenu = () => {
@@ -42,9 +42,9 @@ const Comment = (props: CoP) => {
         toggleMenu()
     }
 
-    const updateComment = async (id: string) => {
-
-        if (updatedComment != props.comment.comment) {
+    const updateComment = async (e:any, id: string) => {
+        e.preventDefault()
+        if (updatedComment && (updatedComment != props.comment.comment)) {
             const newComment = {
                 comment: updatedComment,
                 updated_at: serverTimestamp()
@@ -57,9 +57,30 @@ const Comment = (props: CoP) => {
             }
         }
         setIsUpdating(false);
+        setUpdatedComment('')
     }
 
 
+
+    const dropdownRef = useRef<HTMLDivElement>(null);
+
+    const handleClickOutside = (event: MouseEvent) => {
+        if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+            setShowMenu(false);
+        }
+    };
+
+    useEffect(() => {
+        if (showMenu) {
+            document.addEventListener("mousedown", handleClickOutside);
+        } else {
+            document.removeEventListener("mousedown", handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [showMenu]);
 
     return (
         <div className="flex items-center justify-between rounded-md shadow-sm my-4 p-4">
@@ -71,9 +92,10 @@ const Comment = (props: CoP) => {
                 <div className="w-full flex items-center ml-8 mt-1">
                     {
                         isUpdating ?
-                            <>
+                            <form className="flex items-center w-full gap-2" onSubmit={(e) => {updateComment(e, props.comment.id)}}>
                                 <input
                                     className=" w-[90%] bg-[#272727] text-white rounded-full " type="text"
+                                    placeholder="Update Comment"
                                     value={updatedComment} onChange={(e) => { setUpdatedComment(e.target.value) }}
 
                                 />
@@ -87,12 +109,12 @@ const Comment = (props: CoP) => {
 
                                     <button
                                         className="text-green-500 text-xl"
-                                        onClick={() => { updateComment(props.comment.id) }}
+                                        type="submit"
                                     >
                                         <FaRegCheckCircle />
                                     </button>
                                 </div>
-                            </>
+                            </form>
                             :
                             <p className="py-2">{props.comment.comment}</p>
                     }
@@ -103,7 +125,7 @@ const Comment = (props: CoP) => {
                 isUpdating ?
                     null
                     :
-                    <div className="relative">
+                    <div className="relative" ref={dropdownRef}>
                         <button className="cursor-pointer hover:bg-[#333d42] p-1 rounded-full" onClick={toggleMenu}>
                             <BsThreeDotsVertical />
 

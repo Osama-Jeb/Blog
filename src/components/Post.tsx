@@ -23,12 +23,11 @@ const Post = (props: PoP) => {
 
     return (
         <div className="w-[60vw] p-3 hover:bg-[#181c1f] rounded-xl">
-            <div className="flex items-center gap-3 mb-2">
+            <NavLink to={`/profile/${owner?.id}`} className="flex items-center gap-3 mb-2">
                 <img loading="lazy" className="rounded-full aspect-square" src={owner?.avatar} width={35} alt="" />
                 <p>u/{owner?.username}</p>
-                {/* <p>{formatted}</p> */}
-            </div>
-
+            </NavLink>
+            <hr /> <br />
             <NavLink to={`/post/${props.post.id}`}>
                 <div className="flex items-center justify-between">
                     <div>
@@ -43,7 +42,7 @@ const Post = (props: PoP) => {
                         <img loading="lazy" src={props.post.imageUrl} className="rounded-xl" alt={props.post.title} />
                         :
                         <ReactPlayer pip={true} controls={true} url={props.post.imageUrl} />
-                        
+
                 }
             </div>
 
@@ -64,7 +63,6 @@ const Post = (props: PoP) => {
                 <Bookmark post={props.post} />
 
             </div>
-            <hr className="mt-2" />
         </div>
     )
 }

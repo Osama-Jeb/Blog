@@ -28,10 +28,12 @@ const Comments = (props: PoP) => {
         }
     };
 
-    const addComment = async (id?: string) => {
+    const addComment = async (e: any, id?: string) => {
+        e.preventDefault();
 
         if (!currentUser) {
             alert('Please Sign In or Create an Account')
+            return;
         }
 
         if (!comment) {
@@ -58,18 +60,19 @@ const Comments = (props: PoP) => {
 
     return (
         <>
-            <div className="flex items-center gap-3 text-white mt-3">
+            <form className="flex items-center gap-3 text-white mt-3" onSubmit={(e) => { addComment(e, props.post?.id) }}>
                 <input
                     type="text" placeholder='  Comment' value={comment}
                     className="w-full p-2 rounded-full bg-[#272727]"
                     onChange={(e) => { setComment(e.target.value) }}
                     onKeyDown={handleKeyDown} />
 
-                <button className="text-3xl" onClick={() => { addComment(props.post?.id) }}>
+                <button className="text-3xl"
+                >
                     <IoMdSend />
                 </button>
 
-            </div>
+            </form>
             {sortedComments && sortedComments.map((element, index) => (
                 <div key={index}>
                     <Comment comment={element} />

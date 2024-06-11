@@ -4,7 +4,6 @@ import SideNav from "./components/SideNav"
 import Home from "./pages/home/Home";
 import AddPost from "./components/AddPost";
 import PostPage from "./pages/post/PostPage";
-import Settings from "./pages/settings/Settings";
 import Profile from "./pages/sign/components/Profile";
 import { useAuth } from "./providers/AuthProvider";
 
@@ -19,7 +18,7 @@ const App = () => {
                         <Routes>
                             <Route path="/" element={<Home />} />
                             <Route path="/profile" element={<Profile />} />
-                            <Route path="/settings" element={<Settings />} />
+                            <Route path="/profile/:id" element={<Profile />} />
                             <Route path="/addPost" element={<AddPost />} />
                             <Route path="/post/:id" element={<PostPage />} />
                         </Routes>

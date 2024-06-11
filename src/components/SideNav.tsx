@@ -3,7 +3,7 @@ import { useInfo } from "../providers/InfoProvider";
 import { useRef, useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { FaBars, FaPlus, FaRegUserCircle, FaTimes } from "react-icons/fa";
-import { FaGear, FaHornbill, FaMagnifyingGlass } from "react-icons/fa6";
+import { FaHornbill, FaMagnifyingGlass } from "react-icons/fa6";
 import { TbZoomReset } from "react-icons/tb";
 import { auth } from "../firbase";
 import Login from "../pages/sign/components/Login";
@@ -144,13 +144,9 @@ const SideNav = () => {
                                         <FaRegUserCircle />
                                         Profile
                                     </NavLink>
-                                    <NavLink onClick={() => { setShowSet(false) }} to={"/settings"} className="hidden md:flex items-center gap-3 my-2">
-                                        <FaGear />
-                                        Settings
-                                    </NavLink>
                                     <button
                                         onClick={handleLogout}
-                                        className="bg-red-600 w-full py-1 rounded text-white font-semibold"
+                                        className="bg-red-600 w-full py-1 mt-3 rounded text-white font-semibold"
                                     >
                                         Log Out
                                     </button>
