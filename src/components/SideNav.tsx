@@ -2,14 +2,20 @@ import { useAuth } from "../providers/AuthProvider";
 import { useInfo } from "../providers/InfoProvider";
 import { useRef, useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+
 import { FaBars, FaPlus, FaRegUserCircle, FaTimes } from "react-icons/fa";
 import { FaHornbill, FaMagnifyingGlass } from "react-icons/fa6";
 import { TbZoomReset } from "react-icons/tb";
-import { auth } from "../firbase";
+import { IoChatbubbleEllipsesOutline } from "react-icons/io5";
+
 import Login from "../pages/sign/components/Login";
 import Register from "../pages/sign/components/Register";
+
 import { Modal } from "flowbite-react";
+
+import { auth } from "../firbase";
 import { signInWithEmailAndPassword } from "firebase/auth";
+
 
 const SideNav = () => {
     const { currentUser } = useAuth();
@@ -65,7 +71,7 @@ const SideNav = () => {
     }
 
     return (
-        <nav className="bg-[#202020] text-[#eef1f3] flex items-center justify-between py-3 px-6">
+        <nav className="bg-[#202020] text-[#eef1f3] h-[8vh] flex items-center justify-between py-3 px-6">
             <NavLink className="text-4xl hover:rotate-180" to={"/"}>
                 <FaHornbill />
             </NavLink>
@@ -128,11 +134,18 @@ const SideNav = () => {
                 currentUser ?
                     <div className="flex items-center gap-4 text-xl">
                         {currentUser &&
+                            <>
+                                <NavLink to={"/chat"} className="hidden md:block">
+                                    <IoChatbubbleEllipsesOutline />
+                                </NavLink>
 
-                            <NavLink to={"/addPost"} className="hidden md:flex items-center gap-3 rounded-full hover:bg-gray-700 px-3 py-2">
-                                <FaPlus />
-                                Create
-                            </NavLink>}
+                                <NavLink to={"/addPost"} className="hidden md:flex items-center gap-3 rounded-full hover:bg-gray-700 px-3 py-2">
+                                    <FaPlus />
+                                    Create
+                                </NavLink>
+                            </>
+
+                        }
 
                         <div className="relative" ref={settingsRef}>
                             <button onClick={() => setShowSet(!showSet)}>
@@ -195,14 +208,14 @@ const SideNav = () => {
                             <TbZoomReset />
                         </button>
                     </div>
-                    
-                        {currentUser &&
-                            <NavLink to={"/addPost"} className="flex items-center gap-4 rounded-full hover:bg-gray-700 px-4 py-2">
-                                <FaPlus />
-                                Create
-                            </NavLink>
 
-                        }
+                    {currentUser &&
+                        <NavLink to={"/addPost"} className="flex items-center gap-4 rounded-full hover:bg-gray-700 px-4 py-2">
+                            <FaPlus />
+                            Create
+                        </NavLink>
+
+                    }
                     <button
                         onClick={() => {
                             handleLogout()

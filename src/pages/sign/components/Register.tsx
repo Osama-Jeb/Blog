@@ -6,12 +6,13 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { collection, doc, serverTimestamp, setDoc } from "firebase/firestore";
 
 import { v4 as uuidv4 } from "uuid";
+import { toast } from "react-toastify";
 
 type RegProp = {
     setOpenModal: (openModal: boolean) => void;
 }
 
-const Register = (props : RegProp) => {
+const Register = (props: RegProp) => {
     const [loading, setLoading] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -22,25 +23,25 @@ const Register = (props : RegProp) => {
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
             const file = e.target.files[0];
-    
+
             // file type
             if (!file.type.startsWith('image/')) {
                 alert('Please select a valid image file (PNG or JPEG/JPG).');
                 return;
             }
-    
+
             // file size
             const maxSizeInBytes = 2 * 1024 * 1024; // 2 megabytes
             if (file.size > maxSizeInBytes) {
                 alert('Please select a file smaller than 2 megabytes.');
                 return;
             }
-    
+
             setImage(file);
             setImagePreview(URL.createObjectURL(file));
         }
     };
-    
+
 
     const uploadImage = async (): Promise<string> => {
         if (image) {
@@ -75,12 +76,21 @@ const Register = (props : RegProp) => {
                     created_at: serverTimestamp(),
                     updated_at: serverTimestamp(),
                     avatar: avatarUrl,
-                    bookmark: []
+                    bookmark: [],
+                    blocked: []
                 };
 
                 const userRef = doc(collection(db, 'users'), newUser.id);
                 await setDoc(userRef, newUser);
+
+                await setDoc(doc(db, "userchats", user.uid), {
+                    chats: [],
+                });
+
                 props.setOpenModal(false)
+
+                toast.success("Account created!!");
+
             })
             .catch((error) => {
                 console.log(error);
@@ -108,7 +118,7 @@ const Register = (props : RegProp) => {
                 <input className="w-full rounded" type="text" placeholder="Username" onChange={(e) => setUsername(e.target.value)} value={username} required />
                 <input className="w-full rounded" placeholder="example@email.com" type="email" onChange={(e) => setEmail(e.target.value)} value={email} required />
                 <input className="w-full rounded" placeholder="Password" type="password" onChange={(e) => setPassword(e.target.value)} value={password} required />
-                
+
                 <button className="w-full bg-black text-white px-4 py-2 rounded" disabled={loading} onClick={register}>
                     {loading ? (
                         <div role="status" className="flex items-center justify-center gap-3">

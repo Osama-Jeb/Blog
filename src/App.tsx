@@ -6,9 +6,12 @@ import AddPost from "./components/AddPost";
 import PostPage from "./pages/post/PostPage";
 import Profile from "./pages/sign/components/Profile";
 import { useAuth } from "./providers/AuthProvider";
+import Chat from "./pages/chat/Chat";
+import Notification from "./components/Notification";
 
 const App = () => {
     const { isLoading } = useAuth();
+    
     return (
         <>
             {
@@ -20,6 +23,7 @@ const App = () => {
                             <Route path="/profile/:id" element={<Profile />} />
                             <Route path="/addPost" element={<AddPost />} />
                             <Route path="/post/:id" element={<PostPage />} />
+                            <Route path="/chat" element={<Chat />} />
                         </Routes>
                     </>
 
@@ -28,6 +32,8 @@ const App = () => {
                         <p>LOADDIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIING</p>
                     </div>
             }
+
+            <Notification />
         </>
     )
 }

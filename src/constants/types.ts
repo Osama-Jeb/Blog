@@ -18,6 +18,7 @@ export type User = {
     created_at: any;
     updated_at: any;
     bookmark : string[];
+    blocked: string[];
 }
 
 export type Comment = {
