@@ -150,25 +150,17 @@ const List = () => {
 
 
 
-
-
     return (
         <div className="flex-1 flex flex-col">
             {/* user info */}
             {
                 currentUser && <div className='userInfo flex items-center justify-between p-6'>
                     <div className="user flex items-center gap-2">
-                        <img src={currentUser?.avatar} alt="Avatar" className="w-[20px] h-[20px] rounded-full aspect-square object-cover" />
+                        <img src={currentUser?.avatar} alt="Avatar" className="w-[50px] h-[50px] rounded-full aspect-square object-cover" />
                         <h2>{currentUser?.username}</h2>
-                    </div>
-                    <div className="icons flex gap-5">
-                        <p>icon1</p>
-                        <p>icon2</p>
-                        <p>icon3</p>
                     </div>
                 </div>
             }
-
             {/* chat list */}
             <div className="flex-1 overflow-scroll overflow-x-hidden">
                 <div className="flex items-center gap-5 p-6">

@@ -210,10 +210,16 @@ const SideNav = () => {
                     </div>
 
                     {currentUser &&
-                        <NavLink to={"/addPost"} className="flex items-center gap-4 rounded-full hover:bg-gray-700 px-4 py-2">
-                            <FaPlus />
-                            Create
-                        </NavLink>
+                        <div>
+                            <NavLink to={"/chat"} className="flex items-center gap-4 rounded-full hover:bg-gray-700 px-4 py-2 font-semibold">
+                                <IoChatbubbleEllipsesOutline />
+                                Chat
+                            </NavLink>
+                            <NavLink to={"/addPost"} className="flex items-center gap-4 rounded-full hover:bg-gray-700 px-4 py-2">
+                                <FaPlus />
+                                Create
+                            </NavLink>
+                        </div>
 
                     }
                     <button
