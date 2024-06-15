@@ -15,7 +15,7 @@ const Chat = () => {
 
     return (
         <PrivateRoute>
-            <section className="flex h-[92vh]">
+            <section className="flex h-[90vh]">
                 {
                     showList && <List />
                 }

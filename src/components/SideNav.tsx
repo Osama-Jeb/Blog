@@ -15,6 +15,7 @@ import { Modal } from "flowbite-react";
 
 import { auth } from "../firbase";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import useGoogleTranslate from "../constants/helperFunctions";
 
 
 const SideNav = () => {
@@ -70,20 +71,25 @@ const SideNav = () => {
         setOpenModal(false)
     }
 
+    useGoogleTranslate()
+
     return (
-        <nav className="bg-[#202020] text-[#eef1f3] h-[8vh] flex items-center justify-between py-3 px-6">
+        <nav className="bg-[#202020] text-[#eef1f3] h-[10vh] flex items-center justify-between py-3 px-6">
+            {/* Logo */}
             <NavLink className="text-4xl hover:rotate-180" to={"/"}>
                 <FaHornbill />
             </NavLink>
 
             <div className="hidden md:flex items-center gap-2 w-[60%]">
+
+                {/* Search Bar */}
                 <div className="relative w-full">
                     <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                         <svg className="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                             <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
                         </svg>
                     </div>
-                    <input type="search" id="search" placeholder="Search" required
+                    <input type="search" id="search" placeholder="Search For a Post" required
                         value={term}
                         className="block w-full p-3 ps-10 text-sm text-gray-900 border border-gray-300 rounded-full bg-gray-50"
                         onChange={(e) => { setTerm(e.target.value); }}
@@ -103,6 +109,8 @@ const SideNav = () => {
                 </button>
             </div>
 
+
+            {/* MODAL FOR LOGGING AND REGESTERING */}
             <Modal dismissible className="sm:p-[25vw]" show={openModal} onClose={() => setOpenModal(false)}>
                 <Modal.Header>Welcome</Modal.Header>
                 <Modal.Body>
@@ -127,8 +135,12 @@ const SideNav = () => {
                             className="w-full bg-black text-white px-4 py-2 rounded mt-4">Sign In As Guest</button>
                     </div>
                 </Modal.Body>
-
             </Modal>
+
+            <div>
+                <div id="google_translate_element" className="flex items-center gap-4"></div>
+            </div>
+
 
             {
                 currentUser ?
@@ -143,29 +155,31 @@ const SideNav = () => {
                                     <FaPlus />
                                     Create
                                 </NavLink>
+
+                                <div className="relative hidden md:block" ref={settingsRef}>
+                                    <button onClick={() => setShowSet(!showSet)}>
+                                        {userInfo && <img src={userInfo.avatar} width={60} className="aspect-square rounded-full" alt="user avatar" />}
+                                    </button>
+                                    {showSet && (
+                                        <div className="absolute right-0 mt-2 w-48 p-4 rounded-xl bg-black text-white z-10">
+                                            <NavLink onClick={() => { setShowSet(false) }} to={`/profile/${userInfo?.id}`} className="hidden md:flex items-center gap-3">
+                                                <FaRegUserCircle />
+                                                Profile
+                                            </NavLink>
+                                            <button
+                                                onClick={handleLogout}
+                                                className="bg-red-600 w-full py-1 mt-3 rounded text-white font-semibold"
+                                            >
+                                                Log Out
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
                             </>
 
                         }
 
-                        <div className="relative" ref={settingsRef}>
-                            <button onClick={() => setShowSet(!showSet)}>
-                                {userInfo && <img src={userInfo.avatar} width={30} className="aspect-square rounded-full" alt="user avatar" />}
-                            </button>
-                            {showSet && (
-                                <div className="absolute right-0 mt-2 w-48 p-4 rounded-xl bg-black text-white z-10">
-                                    <NavLink onClick={() => { setShowSet(false) }} to={`/profile/${userInfo?.id}`} className="hidden md:flex items-center gap-3">
-                                        <FaRegUserCircle />
-                                        Profile
-                                    </NavLink>
-                                    <button
-                                        onClick={handleLogout}
-                                        className="bg-red-600 w-full py-1 mt-3 rounded text-white font-semibold"
-                                    >
-                                        Log Out
-                                    </button>
-                                </div>
-                            )}
-                        </div>
+
 
                         <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden">
                             {menuOpen ? <FaTimes /> : <FaBars />}
