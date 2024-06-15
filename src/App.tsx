@@ -2,12 +2,13 @@ import { Route, Routes } from "react-router-dom";
 import "./App.css"
 import SideNav from "./components/SideNav"
 import Home from "./pages/home/Home";
-import AddPost from "./components/AddPost";
+// import AddPost from "./components/AddPost";
 import PostPage from "./pages/post/PostPage";
 import Profile from "./pages/sign/components/Profile";
 import { useAuth } from "./providers/AuthProvider";
 import Chat from "./pages/chat/Chat";
 import Notification from "./components/Notification";
+import AddPost from "./pages/addPost/AddPost";
 
 const App = () => {
     const { isLoading } = useAuth();

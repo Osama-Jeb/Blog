@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useInfo } from "../../../providers/InfoProvider";
-import Liked from "../../liked/Liked";
+
 import { TbArrowBigUpLineFilled } from "react-icons/tb";
 import { FaBookmark, FaCommentAlt } from "react-icons/fa";
 import { FaSignsPost } from "react-icons/fa6";
-import Post from "../../../components/Post";
+
 import { motion, AnimatePresence } from "framer-motion";
 import Comment from "../../../components/Comment";
 import PrivateRoute from "../../../providers/PrivateRouter";
@@ -15,6 +15,35 @@ import { StorageReference, getDownloadURL, ref, uploadBytes } from "firebase/sto
 
 import { v4 as uuidv4 } from "uuid"
 import { NavLink, useParams } from "react-router-dom";
+import { Post as PostProp } from "../../../constants/types";
+import ReactPlayer from "react-player";
+import { toast } from "react-toastify";
+
+type CompProp = {
+    post: PostProp;
+    index: number;
+}
+
+const ComporessedPost = (props: CompProp) => {
+    const regex = /(<([^>]+)>)/gi;
+
+    return (
+        <NavLink to={`/post/${props.post.id}`} key={props.index} className="my-4 flex items-center gap-4 w-[60vw] p-3 hover:bg-[#181c1f] rounded-xl">
+            {
+                props.post.imageUrl?.includes('jpeg') ?
+                    <img loading="lazy" src={props.post.imageUrl} className="w-[250px] h-[250px] aspect-square rounded-xl" alt={props.post.title} />
+                    :
+                    <ReactPlayer pip={true} controls={true} width={250} url={props.post.imageUrl} />
+
+            }
+            <div className="flex flex-col gap-3">
+                <p className="font-bold text-2xl">{props.post.title}</p>
+                <p>{props.post.content.replace(regex, "")}</p>
+            </div>
+        </NavLink>
+    )
+}
+
 
 const Profile = () => {
 
@@ -24,9 +53,12 @@ const Profile = () => {
     const profileOwner = users && Object.values(users).find(user => user.id === id.id);
 
     const [selectedCat, setSelectedCat] = useState("Posts");
+
     const myPosts = posts?.filter(post => post.owner == profileOwner?.id);
     const upvotedPosts = posts?.filter(post => post.upvotes.includes(profileOwner?.id ?? ''));
     const commented = comments?.filter(comm => comm.owner == profileOwner?.id);
+    const bookmarkedPosts = posts?.filter(post => userInfo?.bookmark.includes(post.id))
+
 
 
     const cats = [
@@ -35,6 +67,8 @@ const Profile = () => {
         { name: "Bookmarks", icon: <><FaBookmark /></> },
         { name: "Comments", icon: <><FaCommentAlt /></> },
     ];
+
+
     const renderCategoryContent = () => {
         switch (selectedCat) {
             case 'Posts':
@@ -42,9 +76,9 @@ const Profile = () => {
                     <div>
                         {myPosts && myPosts.length > 0 ?
                             myPosts.sort((a, b) => b.created_at - a.created_at).map((post, index) => (
-                                <div key={index} className="mb-4">
-                                    <Post post={post} />
-                                </div>
+
+                                <ComporessedPost post={post} index={index} />
+
                             ))
                             :
                             <p className="text-4xl font-semibold mt-4">You Have No Posts Yet</p>
@@ -59,9 +93,8 @@ const Profile = () => {
                         {upvotedPosts && upvotedPosts.length > 0 ?
 
                             upvotedPosts.sort((a, b) => b.created_at - a.created_at).map((post, index) => (
-                                <div key={index} className="mb-4 w-[90vw] lg:w-full">
-                                    <Post post={post} />
-                                </div>
+                                <ComporessedPost post={post} index={index} />
+
                             ))
                             :
                             <p className="text-4xl font-semibold mt-4">You Have No Upvotes Yet</p>
@@ -70,7 +103,19 @@ const Profile = () => {
                 );
 
             case 'Bookmarks':
-                return <div><Liked /></div>;
+                return <div>
+
+                    {
+                        bookmarkedPosts && bookmarkedPosts.length > 0 ?
+                            bookmarkedPosts?.map((post, index) => (
+                                <ComporessedPost post={post} index={index} />
+
+                            ))
+                            :
+                            <p className="text-4xl font-semibold mt-4">You Have No Bookmarks Yet</p>
+
+                    }
+                </div>;
 
             case 'Comments':
                 return (
@@ -79,8 +124,8 @@ const Profile = () => {
                             comments && comments.length > 0 ?
                                 commented?.map((comm) => (
                                     <div className="sm:w-[70vw] mt-5 hover:bg-[#181c1f] rounded">
-                                        <NavLink to={`/post/${posts?.filter(post => post.id === comm.postID)[0]?.id}`} 
-                                        className="bg-black text-white rounded px-3 py-2"
+                                        <NavLink to={`/post/${posts?.filter(post => post.id === comm.postID)[0]?.id}`}
+                                            className="bg-black text-white rounded px-3 py-2"
                                         >
                                             Original Post: <span className="font-semibold text-xl">{posts?.filter(post => post.id === comm.postID)[0]?.title}</span>
                                         </NavLink>
@@ -176,6 +221,8 @@ const Profile = () => {
             updateDoc(userRef, newInfo)
             setIsUpdating(false)
             setLoading(false)
+
+            toast.success('Profile Updated');
         } catch (error) {
             console.log(error)
         }

@@ -1,17 +1,18 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../providers/AuthProvider";
 
 import { v4 as uuidv4 } from "uuid"
 
 import { collection, doc, serverTimestamp, setDoc } from "firebase/firestore";
-import { db } from "../firbase";
+import { useAuth } from "../../providers/AuthProvider";
+import { uploadFile } from "../../constants/helperFunctions";
+import { db } from "../../firbase";
+import PrivateRoute from "../../providers/PrivateRouter";
+import Tiptap from "../../components/Tiptap";
+import FileDisplay from "../../components/FileDisplay";
+import { Post } from "../../constants/types";
+import { toast } from "react-toastify";
 
-import { Post } from "../constants/types";
-import Tiptap from "./Tiptap";
-import PrivateRoute from "../providers/PrivateRouter";
-import FileDisplay from "./FileDisplay";
-import { uploadFile } from "../constants/helperFunctions";
 
 
 
@@ -69,6 +70,7 @@ const AddPost = () => {
 
             setTitle('');
             setContent('');
+            toast.success('Post Created!!')
             navigate('/')
         } catch (error) {
             console.error(error);

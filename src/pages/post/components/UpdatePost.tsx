@@ -6,6 +6,7 @@ import FileDisplay from "../../../components/FileDisplay";
 import ReactPlayer from "react-player";
 import Tiptap from "../../../components/Tiptap";
 import { uploadFile } from "../../../constants/helperFunctions";
+import { toast } from "react-toastify";
 
 
 type UpdatePostProps = {
@@ -47,6 +48,7 @@ const UpdatePost = (props : UpdatePostProps) => {
             updateDoc(postRef, newPost);
             props.setIsUpdating(false);
             setImage(null)
+            toast.success('Post Updated!!');
         } catch (error) {
             console.log(error)
         }

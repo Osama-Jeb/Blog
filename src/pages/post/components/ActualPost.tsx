@@ -17,6 +17,7 @@ import { collection, deleteDoc, doc, getDocs, query, where } from "firebase/fire
 
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { GoCommentDiscussion } from "react-icons/go";
+import { toast } from "react-toastify";
 
 
 type ActualPostProps = {
@@ -66,6 +67,7 @@ const ActualPost = (props: ActualPostProps) => {
                 await Promise.all(deleteCommentPromises);
 
                 // go back to home
+                toast.error('Post Deleted');
                 navigate('/')
 
             } catch (error) {
