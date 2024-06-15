@@ -17,6 +17,7 @@ import { collection, deleteDoc, doc } from "firebase/firestore";
 
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { GoCommentDiscussion } from "react-icons/go";
+import useGoogleTranslate from "../../../constants/helperFunctions";
 
 
 type ActualPostProps = {
@@ -79,9 +80,13 @@ const ActualPost = (props: ActualPostProps) => {
     }, [showMenu]);
 
 
+    useGoogleTranslate()
+
     return (
         <div className="flex justify-center min-h-[100vh] pb-5">
             <div className="bg-[#272727] sm:w-[75vw] p-4">
+
+                <div id="google_translate_element"></div>
                 <div className="flex items-center justify-between p-4">
                     <NavLink to={`/profile/${owner?.id}`} className="flex items-center gap-3">
                         <img loading="lazy" className="rounded-full aspect-square" src={owner?.avatar} width={35} alt="user avatar" />
@@ -143,7 +148,11 @@ const ActualPost = (props: ActualPostProps) => {
                     <Bookmark post={props.post} />
                 </div>
                 <Comments post={props.post} />
+
+
+
             </div>
+
         </div>
     )
 }
