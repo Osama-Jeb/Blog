@@ -13,7 +13,7 @@ import ReactPlayer from "react-player";
 
 import { deleteObject, ref } from "firebase/storage";
 import { db, storage } from "../../../firbase";
-import { collection, deleteDoc, doc } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDocs, query, where } from "firebase/firestore";
 
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { GoCommentDiscussion } from "react-icons/go";
@@ -42,13 +42,30 @@ const ActualPost = (props: ActualPostProps) => {
     const deletePost = async (post: Post | undefined) => {
         if (confirm("Are You Sure You Want To Delete This Post")) {
             try {
+                // if theres a file to the post, then delete it
                 if (post?.imageUrl) {
                     const uuid = post?.imageUrl.slice(77, 113);
                     const imageRef = ref(storage, 'posts/' + uuid)
                     deleteObject(imageRef).then(() => { console.log("image deleted") })
                 }
+
+                // delete the post
                 const postRef = doc(collection(db, 'posts'), post?.id)
                 await deleteDoc(postRef);
+
+                
+                // get the comments that are in the post and delete them as well
+                const commentsQuery = query(collection(db, 'comments'), where('postID', '==', post?.id));
+                const commentsSnapshot = await getDocs(commentsQuery);
+
+                const deleteCommentPromises: Promise<void>[] = [];
+                commentsSnapshot.forEach((commentDoc) => {
+                    deleteCommentPromises.push(deleteDoc(commentDoc.ref));
+                });
+
+                await Promise.all(deleteCommentPromises);
+
+                // go back to home
                 navigate('/')
 
             } catch (error) {

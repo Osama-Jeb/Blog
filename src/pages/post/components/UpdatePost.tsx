@@ -1,12 +1,11 @@
-import { StorageReference, getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useState } from "react";
-import { db, storage } from "../../../firbase";
-import {v4 as uuidv4} from "uuid"
+import { db } from "../../../firbase";
 import { collection, doc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { Post } from "../../../constants/types";
 import FileDisplay from "../../../components/FileDisplay";
 import ReactPlayer from "react-player";
 import Tiptap from "../../../components/Tiptap";
+import { uploadFile } from "../../../constants/helperFunctions";
 
 
 type UpdatePostProps = {
@@ -22,43 +21,14 @@ const UpdatePost = (props : UpdatePostProps) => {
     const [image, setImage] = useState<any>(null);
     const [loading, setLoading] = useState(false);
 
-    const uploadFile = async (): Promise<string> => {
-        if (image) {
-            setLoading(true);
-            let imageRef: StorageReference;
 
-            // add an extension depending on the file format
-            if (image.type.startsWith('image')) {
-                imageRef = ref(storage, `posts/${uuidv4()}.jpeg`);
-            } else if (image.type.startsWith('video')) {
-                imageRef = ref(storage, `posts/${uuidv4()}.mp4`);
-            } else {
-                alert('file type not supported')
-                throw Error('File Type Not Supported')
-            }
-
-            try {
-                const snapshot = await uploadBytes(imageRef, image);
-                const url = await getDownloadURL(snapshot.ref);
-                setLoading(false);
-                return url;
-            } catch (error) {
-                console.error(error);
-                setLoading(false);
-                throw error;
-            }
-        } else {
-            return ""
-        }
-    }
-
-    const updatePost = async (e:any, id: string) => {
+    const handleUpdatePost = async (e:any, id: string) => {
         e.preventDefault()
         let imageUrl = "";
 
         if (image) {
             try {
-                imageUrl = await uploadFile();
+                imageUrl = await uploadFile(image, setLoading);
             } catch (error) {
                 console.error("Image upload failed", error);
                 return;
@@ -81,28 +51,35 @@ const UpdatePost = (props : UpdatePostProps) => {
             console.log(error)
         }
     }
+
+    const handleCancel = () => {
+        props.setIsUpdating(false);
+        setImage(null);
+        setTitle(props.post.title);
+        setContent(props.post.content)
+    }
     return (
         <div className="flex justify-center min-h-[100vh] mt-3 p-4">
             <form className="flex items-center sm:w-[75vw] flex-col gap-3"
-            onSubmit={(e) => {updatePost(e, props.post.id)}}
+            onSubmit={(e) => {handleUpdatePost(e, props.post.id)}}
             >
-                <button onClick={() => { props.setIsUpdating(false) }} className="px-4 py-2 bg-red-600 rounded">Cancel Update</button>
+                <button onClick={() => {handleCancel() }} className="px-4 py-2 bg-red-600 rounded">Cancel Update</button>
                 <input className="bg-[#272727] w-full text-[#eef1f3] rounded-xl py-3" placeholder='Title' type="text" value={title} onChange={(e) => { setTitle(e.target.value) }} />
 
-                <Tiptap content={content ? content : ""} setContent={setContent} />
+                <Tiptap place="update" content={content ? content : ""} setContent={setContent} />
 
                 <input className="w-full" type="file" onChange={(e) => { setImage(e.target.files ? e.target.files[0] : null) }} />
 
-                <div className="flex items-center justify-center mt-4">
+                <div className="flex w-full items-center justify-center mt-4">
                     {
                         image ?
-                            <FileDisplay image={image} />
+                            <FileDisplay place="update" image={image} />
                             :
 
                             <>
                                 {
                                     props.post.imageUrl?.includes('jpeg') ?
-                                        <img loading="lazy" src={props.post.imageUrl} width={200} className="rounded-xl w-full" alt={props.post.title} />
+                                        <img loading="lazy" src={props.post.imageUrl} className="rounded-xl w-full" alt={props.post.title} />
                                         :
                                         <ReactPlayer controls={true} url={props.post.imageUrl} />
                                 }

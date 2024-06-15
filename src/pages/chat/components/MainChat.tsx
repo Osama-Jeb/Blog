@@ -200,7 +200,7 @@ const MainChat = (props: MainChatProps) => {
                             <div className="texts flex-1 flex flex-col gap-1">
                                 {
                                     message.img && (
-                                        message.img.includes('png') ?
+                                        message.img.includes('png') || message.img.includes('gif') || message.img.includes('jpeg') ?
 
                                             <img src={message.img} className="w-full h-[300px] rounded-xl aspect-square object-cover" alt="" />
                                             :

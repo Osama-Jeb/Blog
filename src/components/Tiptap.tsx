@@ -98,6 +98,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
 };
 
 type TipProp = {
+    place: string;
     content: string;
     setContent: (content: string) => void;
 }
@@ -115,7 +116,8 @@ const Tiptap = (props: TipProp) => {
         <>
             <MenuBar editor={editor} />
             <EditorContent
-                className='prose-lg dangerous mt-4 w-full'
+                // className='prose-lg dangerous mt-4 w-full'
+                className={`prose-lg dangeous mt-4 ${props.place === 'add' ? 'w-[50vw]' : 'w-full'}`}
                 editor={editor}
             />
         </>

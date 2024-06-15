@@ -78,9 +78,9 @@ const Profile = () => {
                         {
                             comments && comments.length > 0 ?
                                 commented?.map((comm) => (
-                                    <div className="sm:w-[70vw] mt-5 hover:bg-[#181c1f] p-3 rounded">
+                                    <div className="sm:w-[70vw] mt-5 hover:bg-[#181c1f] rounded">
                                         <NavLink to={`/post/${posts?.filter(post => post.id === comm.postID)[0]?.id}`} 
-                                        className="bg-black text-white rounded px-2 py-1"
+                                        className="bg-black text-white rounded px-3 py-2"
                                         >
                                             Original Post: <span className="font-semibold text-xl">{posts?.filter(post => post.id === comm.postID)[0]?.title}</span>
                                         </NavLink>
@@ -144,6 +144,7 @@ const Profile = () => {
             return ""
         }
     }
+
     const updateUser = async (e: any) => {
         e.preventDefault()
         setLoading(true)
@@ -151,7 +152,6 @@ const Profile = () => {
             alert('Please Write a Username');
             return
         }
-
 
         let newImg = "";
 

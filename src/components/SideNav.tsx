@@ -15,7 +15,7 @@ import { Modal } from "flowbite-react";
 
 import { auth } from "../firbase";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import useGoogleTranslate from "../constants/helperFunctions";
+import { useGoogleTranslate } from "../constants/helperFunctions";
 
 
 const SideNav = () => {
@@ -137,9 +137,10 @@ const SideNav = () => {
                 </Modal.Body>
             </Modal>
 
-            <div>
+            {/* GoOgLe tRaNsLaTe sElEcT */}
+            {/* <div>
                 <div id="google_translate_element" className="flex items-center gap-4"></div>
-            </div>
+            </div> */}
 
 
             {
@@ -147,7 +148,8 @@ const SideNav = () => {
                     <div className="flex items-center gap-4 text-xl">
                         {currentUser &&
                             <>
-                                <NavLink to={"/chat"} className="hidden md:block">
+                                <NavLink to={"/chat"} className="hidden md:block"
+                                >
                                     <IoChatbubbleEllipsesOutline />
                                 </NavLink>
 
@@ -158,7 +160,7 @@ const SideNav = () => {
 
                                 <div className="relative hidden md:block" ref={settingsRef}>
                                     <button onClick={() => setShowSet(!showSet)}>
-                                        {userInfo && <img src={userInfo.avatar} width={60} className="aspect-square rounded-full" alt="user avatar" />}
+                                        {userInfo && <img src={userInfo.avatar} width={45} className="aspect-square object-cover rounded-full" alt="user avatar" />}
                                     </button>
                                     {showSet && (
                                         <div className="absolute right-0 mt-2 w-48 p-4 rounded-xl bg-black text-white z-10">
@@ -225,11 +227,15 @@ const SideNav = () => {
 
                     {currentUser &&
                         <div>
-                            <NavLink to={"/chat"} className="flex items-center gap-4 rounded-full hover:bg-gray-700 px-4 py-2 font-semibold">
+                            <NavLink to={"/chat"} className="flex items-center gap-4 rounded-full hover:bg-gray-700 px-4 py-2 font-semibold"
+                            onClick={() => {setMenuOpen(false)}}
+                            >
                                 <IoChatbubbleEllipsesOutline />
                                 Chat
                             </NavLink>
-                            <NavLink to={"/addPost"} className="flex items-center gap-4 rounded-full hover:bg-gray-700 px-4 py-2">
+                            <NavLink to={"/addPost"} className="flex items-center gap-4 rounded-full hover:bg-gray-700 px-4 py-2"
+                            onClick={() => {setMenuOpen(false)}}
+                            >
                                 <FaPlus />
                                 Create
                             </NavLink>

@@ -63,7 +63,8 @@ const Register = (props: RegProp) => {
         }
     }
 
-    const register = () => {
+    const register = (e: any) => {
+        e.preventDefault()
         createUserWithEmailAndPassword(auth, email, password)
             .then(async (userCredential) => {
                 const user = userCredential.user;
@@ -99,7 +100,9 @@ const Register = (props: RegProp) => {
 
     return (
         <>
-            <div className="flex flex-col items-center gap-4 ">
+            <form 
+            onSubmit={register}
+            className="flex flex-col items-center gap-4 ">
                 <label htmlFor="file-input" className="flex items-center justify-center w-20 text-5xl font-bold h-20 bg-black text-white rounded-full cursor-pointer">
                     {imagePreview ? (
                         <img src={imagePreview} alt="Selected" className="w-20 h-20 rounded-full aspect-square" />
@@ -119,7 +122,9 @@ const Register = (props: RegProp) => {
                 <input className="w-full rounded" placeholder="example@email.com" type="email" onChange={(e) => setEmail(e.target.value)} value={email} required />
                 <input className="w-full rounded" placeholder="Password" type="password" onChange={(e) => setPassword(e.target.value)} value={password} required />
 
-                <button className="w-full bg-black text-white px-4 py-2 rounded" disabled={loading} onClick={register}>
+                <button className="w-full bg-black text-white px-4 py-2 rounded" disabled={loading} 
+                type="submit"
+                >
                     {loading ? (
                         <div role="status" className="flex items-center justify-center gap-3">
                             <svg aria-hidden="true" className="w-6 h-6 text-gray-200 animate-spin dark:text-gray-600 fill-white" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -132,7 +137,7 @@ const Register = (props: RegProp) => {
                         'Register'
                     )}
                 </button>
-            </div>
+            </form>
         </>
     )
 }

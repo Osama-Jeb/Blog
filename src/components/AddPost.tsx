@@ -5,13 +5,13 @@ import { useAuth } from "../providers/AuthProvider";
 import { v4 as uuidv4 } from "uuid"
 
 import { collection, doc, serverTimestamp, setDoc } from "firebase/firestore";
-import { db, storage } from "../firbase";
-import { StorageReference, getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { db } from "../firbase";
 
 import { Post } from "../constants/types";
 import Tiptap from "./Tiptap";
 import PrivateRoute from "../providers/PrivateRouter";
 import FileDisplay from "./FileDisplay";
+import { uploadFile } from "../constants/helperFunctions";
 
 
 
@@ -27,35 +27,6 @@ const AddPost = () => {
 
     const navigate = useNavigate()
 
-    const uploadFile = async (): Promise<string> => {
-        if (image) {
-            setLoading(true);
-            let imageRef : StorageReference;
-            
-            // add an extension depending on the file format
-            if (image.type.startsWith('image')) {
-                imageRef = ref(storage, `posts/${uuidv4()}.jpeg`);
-            } else if (image.type.startsWith('video')) {
-                imageRef = ref(storage, `posts/${uuidv4()}.mp4`);
-            } else {
-                alert('file type not supported')
-                throw Error('File Type Not Supported')
-            }
-
-            try {
-                const snapshot = await uploadBytes(imageRef, image);
-                const url = await getDownloadURL(snapshot.ref);
-                setLoading(false);
-                return url;
-            } catch (error) {
-                console.error(error);
-                setLoading(false);
-                throw error;
-            }
-        } else {
-            return ""
-        }
-    }
 
     const addPost = async (e: any) => {
         e.preventDefault()
@@ -73,7 +44,7 @@ const AddPost = () => {
 
         if (image) {
             try {
-                fileUrl = await uploadFile();
+                fileUrl = await uploadFile(image, setLoading);
             } catch (error) {
                 console.error("Image upload failed", error);
                 return;
@@ -116,13 +87,13 @@ const AddPost = () => {
                     placeholder='Title' type="text" value={title}
                     onChange={(e) => { setTitle(e.target.value) }} />
 
-                <Tiptap content={content} setContent={setContent} />
+                <Tiptap place="add" content={content} setContent={setContent} />
 
                 <input className="w-[51%]" type="file"
                     onChange={(e) => { setImage(e.target.files ? e.target.files[0] : null) }} />
 
                 {
-                    image && <FileDisplay image={image} />
+                    image && <FileDisplay place="add" image={image} />
                 }
 
                 <button className="bg-blue-500 font-semibold text-white px-4 py-2 rounded w-[50%] mt-2"

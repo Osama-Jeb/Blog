@@ -37,7 +37,7 @@ const List = () => {
 
             const chatData = await Promise.all(promises);
 
-            setChats(chatData.sort((a, b) => a.updatedAt - b.updatedAt));
+            setChats(chatData.sort((a, b) => b.updatedAt - a.updatedAt));
         })
 
         return () => {

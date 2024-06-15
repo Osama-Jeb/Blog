@@ -12,7 +12,8 @@ const Login = (props: LogProp) => {
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
 
-    const signIn = async () => {
+    const signIn = async (e: any) => {
+        e.preventDefault()
         setLoading(true)
         await signInWithEmailAndPassword(auth, email, password)
         setEmail('');
@@ -22,7 +23,9 @@ const Login = (props: LogProp) => {
     }
 
     return (
-        <div className="flex flex-col items-center gap-4">
+        <form 
+        onSubmit={signIn}
+        className="flex flex-col items-center gap-4">
             <input
                 className="w-full" placeholder="Email" type="email"
                 onChange={(e) => { setEmail(e.target.value) }} value={email} />
@@ -33,13 +36,14 @@ const Login = (props: LogProp) => {
             <button
                 disabled={loading}
                 className="bg-black text-white px-4 py-2 w-full flex items-center justify-center gap-3"
-                onClick={signIn}>
+                type="submit"
+                >
                 {
                     loading && <Spinner aria-label="spinner" />
                 }
                 Sign In
             </button>
-        </div>
+        </form>
     )
 }
 
