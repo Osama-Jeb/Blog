@@ -103,7 +103,7 @@ const Post = (props: PoP) => {
                 </NavLink>
 
                 {
-                    currentUser.id != owner?.id ?
+                    currentUser && currentUser?.id != owner?.id ?
                         <button
                             disabled={loading}
                             className="px-4 py-2 bg-black text-white rounded"
@@ -136,7 +136,7 @@ const Post = (props: PoP) => {
 
                 <UpvoteDownvote post={props.post} />
 
-                <NavLink to={`/post/${props.post.id}`}>
+                <NavLink to={`/post/${props.post?.id}`}>
 
                     <div className="flex items-center gap-1 bg-[#2a3236] px-3  py-1 hover:bg-[#333d42] rounded-full">
                         <GoCommentDiscussion />

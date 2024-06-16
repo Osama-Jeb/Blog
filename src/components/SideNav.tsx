@@ -138,9 +138,9 @@ const SideNav = () => {
             </Modal>
 
             {/* GoOgLe tRaNsLaTe sElEcT */}
-            {/* <div>
+            <div>
                 <div id="google_translate_element" className="flex items-center gap-4"></div>
-            </div> */}
+            </div>
 
 
             {
