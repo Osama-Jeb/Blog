@@ -127,7 +127,7 @@ const Post = (props: PoP) => {
                     props.post.imageUrl?.includes('jpeg') ?
                         <img loading="lazy" src={props.post.imageUrl} className="rounded-xl" alt={props.post.title} />
                         :
-                        <ReactPlayer pip={true} controls={true} url={props.post.imageUrl} />
+                        <ReactPlayer pip={true} controls={true} width={350} url={props.post.imageUrl} />
 
                 }
             </div>
